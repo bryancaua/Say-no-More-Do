@@ -1,0 +1,13 @@
+:root {
+  --color-background: #F5F4F7;
+  --color-aside: #1C1B2E;
+  --color-primary: #6C4FBF;
+  --color-primary-dark: #3E2A8E;
+  --color-accent-soft: #E8E3F8;
+  --color-card-bg: #FFFFFF;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+}
