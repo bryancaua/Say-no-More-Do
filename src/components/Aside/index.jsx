@@ -27,7 +27,7 @@ export function Aside() {
     <aside
       className={
         collapsed
-          ? `${styles.aside} ${styles.aside_collapsed}`
+          ? `${styles.aside}`
           : `${styles.aside} ${styles.aside_expanded}`
       }
       onMouseEnter={() => setCollapsed(false)}
@@ -37,40 +37,27 @@ export function Aside() {
 
       <nav className={styles.nav}>
         {navItems.map(({ id, label, icon: Icon }) => (
-          <IconButton key={id} onClick={() => setSelected(id)}>
+          <IconButton
+            selected={selected}
+            collapsed={collapsed}
+            id={id}
+            key={id}
+            onClick={() => setSelected(id)}
+          >
             <div className={styles.icon_wrapper}>
               <Icon
                 strokeWidth={1.8}
                 className={`${
-                  collapsed ? styles.icons : styles.icons_expanded
-                } ${selected === id ? styles.selected : ""}`}
+                  selected === id ? styles.icons_selected : styles.icons
+                }`}
               />
             </div>
-            <p className={styles.p}>{label}</p>
+            <p className={`${selected === id ? styles.p_selected : styles.p} ${collapsed ? styles.p_collapsed : ""}`}>
+              {label}
+            </p>
           </IconButton>
         ))}
       </nav>
     </aside>
   );
 }
-
-/*
-        <IconButton onClick={() => setSelected(!selected)}>
-          <div className={styles.icon_wrapper}>
-            <LayoutDashboardIcon
-              strokeWidth={1.8}
-              className={collapsed ? styles.icons : styles.icons_expanded}
-            />
-          </div>
-          <p className={styles.p}>Dashboard</p>
-        </IconButton>
-
-        <IconButton>
-          <div className={styles.icon_wrapper}>
-            <CheckSquare
-              strokeWidth={1.8}
-              className={collapsed ? styles.icons : styles.icons_expanded}
-            />
-          </div>
-          <p className={styles.p}>Tarefas</p>
-        </IconButton> */

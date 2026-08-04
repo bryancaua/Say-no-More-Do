@@ -1,13 +1,13 @@
-
 import styles from "../Aside/aside.module.css";
 
 
-export function IconButton({collapsed, children}) {
-
+export function IconButton({collapsed, children, selected, id, onClick}) {
 
   return (
     <button
-      className={`${styles.button} ${collapsed ? styles.button_active : ""}`}>
+      onClick={onClick}
+      className={`${collapsed ? styles.button : styles.button } ${selected === id ? styles.selected : ""}`}>
+        <span className={`${selected === id ? styles.span : ""}`}/>
         {children}
     </button>
   );
