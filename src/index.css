@@ -1,10 +1,18 @@
 :root {
-  --color-background: #F5F4F7;
-  --color-aside: #1C1B2E;
-  --color-primary: #6C4FBF;
-  --color-primary-dark: #3E2A8E;
-  --color-accent-soft: #E8E3F8;
-  --color-card-bg: #FFFFFF;
+  --color-background: #f5f4f7;
+  --color-aside: #1c1b2e;
+  --color-primary: #6c4fbf;
+  --color-primary-dark: #3e2a8e;
+  --color-accent-soft: #e8e3f8;
+  --color-card-bg: #ffffff;
+
+  --font-inter: font-family: "Inter", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
