@@ -1,0 +1,56 @@
+.section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 6rem;
+}
+
+.p {
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  color: #302e2eaf;
+  white-space: nowrap;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 3rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.button {
+  width: 100%;
+  height: auto;
+  padding: 1rem;       
+  border: none;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.div_lists {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 280px;  
+  flex-shrink: 0; 
+}
+
+.cardWrapper {
+  flex: 1;
+  display: flex;
+}

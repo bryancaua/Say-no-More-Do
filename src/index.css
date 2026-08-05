@@ -6,17 +6,29 @@
   --color-accent-soft: #e8e3f8;
   --color-card-bg: #ffffff;
   --color-selected: #A78BFA;
-
-  --font-inter: font-family: "Inter", sans-serif;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
   margin: 0;
   background-color: var(--color-background);
+  display: flex;
+  flex-direction: row;
+}
+
+#root {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
 }

@@ -1,9 +1,13 @@
-import { Aside } from "./components/Aside"
+import { Aside } from "./components/Aside";
+import { Tasks } from "./components/Tasks";
 
 function App() {
   return (
-    <Aside />
-  )
+    <>
+      <Aside />
+      <Tasks />
+    </>
+  );
 }
 
-export default App
+export default App;
