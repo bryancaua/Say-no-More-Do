@@ -1,6 +1,5 @@
 import styles from "../Aside/aside.module.css";
 
-
 export function IconButton({collapsed, children, selected, id, onClick}) {
 
   return (

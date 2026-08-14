@@ -10,7 +10,6 @@ const list = [
 export function ToDoProvider({ children }) {
   const [lists, setLists] = useState(list);
   const [isOpen, setIsOpen] = useState(false);
-  const [isClosed, setIsClosed] = useState(true);
 
   function alterarCor(id, novaCor) {
     setLists((prev) =>
@@ -25,14 +24,14 @@ export function ToDoProvider({ children }) {
   }
 
   function closeForm() {
-    setIsClosed(false);
+    setIsOpen(false);
   }
 
   function addList(formData) {
-    const titulo = formData.get("titulo");
-    const corInicial = formData.get("cor");
+    const nome = formData.get("nome");
+    const cor = formData.get("cor");
     const id = crypto.randomUUID();
-    setLists((prev) => [...prev, { id, titulo, corInicial }]);
+    setLists((prev) => [...prev, { nome, id, cor }]);
   }
 
   return (
@@ -41,7 +40,6 @@ export function ToDoProvider({ children }) {
         addList,
         lists,
         isOpen,
-        isClosed,
         closeForm,
         alterarCor,
         openForm

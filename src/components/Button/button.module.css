@@ -8,6 +8,7 @@
   font-size: 0.8rem;
   line-height: 19.5px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  min-width: 50%;
   max-width: 80%;
   transition: all 0.5s;
   position: relative;

@@ -1,0 +1,27 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(28, 27, 46, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.form {
+  background-color: var(--color-card-bg);
+  border-radius: 20px;
+  padding: 2rem 2.5rem 2.5rem;
+  width: 420px;
+  max-width: 90%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: rgba(99, 99, 99, 0.25) 0px 12px 32px 0px;
+  border-top: 4px solid var(--color-primary);
+}

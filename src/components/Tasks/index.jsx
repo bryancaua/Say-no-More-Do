@@ -3,12 +3,12 @@ import { Card } from "../Card";
 import styles from "./tasks.module.css";
 import { Button } from "../Button";
 import ToDoContext from "../ToDoProvider/ToDoContext";
-
+import { Form } from "../Form";
+import { Input } from "../Input";
+import {X} from "lucide-react";
 
 export function Tasks() {
-  const {isOpen, alterarCor, openForm, lists} = use(ToDoContext)
-
-  console.log(isOpen)
+  const { alterarCor, openForm, lists, closeForm } = use(ToDoContext);
 
   return (
     <>
@@ -43,8 +43,23 @@ export function Tasks() {
               })}
             </ul>
             <Button onClick={() => openForm()}>+ Adicionar lista</Button>
-
           </div>
+
+          <Form>
+            <div className={styles.div}>
+              <h2>Criar lista</h2>
+              <X style={{ cursor: "pointer", color: "var(--color-primary)" }} size={20} onClick={() => closeForm()} />
+            </div>
+            <Input name="nome" placeholder="Digite o nome da sua lista..." required/>
+            <div className={styles.colorSection}>
+              <span className={styles.colorLabel}>Selecione a cor da sua lista</span>
+              <div className={styles.colorPickerWrapper}>
+                <Input name="cor" type="color" defaultValue="#000000" />
+              </div>
+            </div>
+            
+            <Button type="submit">Enviar</Button>
+          </Form>
 
           <div className={styles.cardWrapper}>
             <Card />
