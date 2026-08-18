@@ -10,6 +10,7 @@ const list = [
 export function ToDoProvider({ children }) {
   const [lists, setLists] = useState(list);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedList, setSelectedList]= useState(list);
 
   function alterarCor(id, novaCor) {
     setLists((prev) =>
@@ -32,6 +33,7 @@ export function ToDoProvider({ children }) {
     const cor = formData.get("cor");
     const id = crypto.randomUUID();
     setLists((prev) => [...prev, { nome, id, cor }]);
+    closeForm();
   }
 
   return (
@@ -42,7 +44,9 @@ export function ToDoProvider({ children }) {
         isOpen,
         closeForm,
         alterarCor,
-        openForm
+        openForm,
+        selectedList,
+        setSelectedList
       }}
     >
       {children}

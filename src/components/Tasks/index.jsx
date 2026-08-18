@@ -8,7 +8,17 @@ import { Input } from "../Input";
 import {X} from "lucide-react";
 
 export function Tasks() {
-  const { alterarCor, openForm, lists, closeForm } = use(ToDoContext);
+  const { alterarCor, openForm, lists, closeForm, selectedList, setSelectedList } = use(ToDoContext);
+
+
+  function hexParaRgba(hex, opacidade) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacidade})`;
+}
+
+  console.log(selectedList)
 
   return (
     <>
@@ -23,20 +33,22 @@ export function Tasks() {
             <ul className={styles.ul}>
               {lists.map(({ nome, id, cor }) => {
                 return (
-                  <li className={styles.li} key={id}>
+                  <li className={styles.li} key={id} onClick={() => setSelectedList(id)} >
                     <input
                       type="color"
                       value={cor}
                       onChange={(e) => alterarCor(id, e.target.value)}
                       className={styles.inputColorEscondido}
                     />
-                    <button className={styles.button}>
+                    <button className={styles.button}
+                      style={{boxShadow: selectedList === id ? `0px 0px 0px 0.2px ${cor}` : `rgba(0, 0, 0, 0.2) 0px 0px 0px 0.4px`, backgroundColor: selectedList === id ? hexParaRgba(cor, 0.08) : "#ffff",}}
+                    >
                       <span
                         className={styles.bolinha}
                         style={{ backgroundColor: cor }}
                         role="button"
                       />
-                      {nome}
+                      <p style={{fontWeight: selectedList === id ? "600" : "400"}} className={styles.p}>{nome}</p>
                     </button>
                   </li>
                 );
