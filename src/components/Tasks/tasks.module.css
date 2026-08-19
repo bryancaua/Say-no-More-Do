@@ -10,7 +10,7 @@
   font-size: 14px;
   font-family: "Inter", sans-serif;
   font-weight: 400;
-  color: #1C1B2E;
+  color: #1c1b2e;
   white-space: nowrap;
 }
 
@@ -19,21 +19,6 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-}
-
-.div h2 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1c1b2e;
-}
-
-.div svg {
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.div svg:hover {
-  opacity: 0.7;
 }
 
 .header {
@@ -60,7 +45,7 @@
   gap: 0.7rem;
   width: 100%;
   height: auto;
-  padding: 1rem;
+  padding: 0.9rem 1rem;
   border: none;
   border-radius: 12px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
@@ -147,7 +132,8 @@
   padding: 6px;
   border-radius: 50%;
   background-color: #f5f4f7;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   transition: box-shadow 0.2s ease;
 }
 
@@ -155,4 +141,25 @@
   box-shadow: rgba(108, 79, 191, 0.25) 0px 0px 0px 4px;
 }
 
+.divFilters {
+  display: flex;
+  width: fit-content; /* em vez de max-width: 40% */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  align-items: center;
+}
 
+.divFilters > button {
+  min-width: 90px;
+  width: auto;
+  flex-shrink: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.divFilters > button:last-child {
+  border-right: none;
+}

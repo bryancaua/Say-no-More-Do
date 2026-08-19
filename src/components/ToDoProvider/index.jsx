@@ -9,8 +9,16 @@ const list = [
 
 export function ToDoProvider({ children }) {
   const [lists, setLists] = useState(list);
-  const [isOpen, setIsOpen] = useState(false);
   const [selectedList, setSelectedList]= useState(list);
+  const [activeForm, setActiveForm] = useState(null)
+
+  function openForm(name) {
+    setActiveForm(name);
+  }
+
+  function closeForm() {
+    setActiveForm(null);
+  }
 
   function alterarCor(id, novaCor) {
     setLists((prev) =>
@@ -20,13 +28,6 @@ export function ToDoProvider({ children }) {
     );
   }
 
-  function openForm() {
-    setIsOpen(true);
-  }
-
-  function closeForm() {
-    setIsOpen(false);
-  }
 
   function addList(formData) {
     const nome = formData.get("nome");
@@ -41,12 +42,12 @@ export function ToDoProvider({ children }) {
       value={{
         addList,
         lists,
-        isOpen,
         closeForm,
         alterarCor,
         openForm,
         selectedList,
-        setSelectedList
+        setSelectedList,
+        activeForm,
       }}
     >
       {children}

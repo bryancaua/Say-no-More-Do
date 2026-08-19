@@ -2,10 +2,10 @@ import styles from "./form.module.css";
 import { use } from "react";
 import ToDoContext from "../ToDoProvider/ToDoContext";
 
-export function Form({ children, ...rest }) {
-  const { addList, isOpen } = use(ToDoContext);
-
-  if(!isOpen) return null;
+export function Form({ children, name, ...rest }) {
+  const { addList, activeForm } = use(ToDoContext);
+  
+  if(activeForm !== name) return null;
 
   return (
     <div className={styles.overlay}>
