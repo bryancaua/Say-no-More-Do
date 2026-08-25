@@ -2,15 +2,17 @@ import { useState } from "react";
 import ToDoContext from "./ToDoContext";
 
 const list = [
-  { nome: "estudos", id: crypto.randomUUID(), cor: "#4f46e5" },
-  { nome: "vida pessoal", id: crypto.randomUUID(), cor: "#22c55e" },
-  { nome: "Academia", id: crypto.randomUUID(), cor: "#ef4444" },
+  { nome: "vida pessoal", id: crypto.randomUUID(), cor: "#b5c623" },
+  { nome: "Academia", id: crypto.randomUUID(), cor: "#a01ab2" },
 ];
+
+  const todo = [];
 
 export function ToDoProvider({ children }) {
   const [lists, setLists] = useState(list);
-  const [selectedList, setSelectedList]= useState(list);
-  const [activeForm, setActiveForm] = useState(null)
+  const [selectedList, setSelectedList]= useState(null);
+  const [activeForm, setActiveForm] = useState(null);
+  const [toDos, setTodos] = useState(todo)
 
   function openForm(name) {
     setActiveForm(name);
@@ -36,6 +38,15 @@ export function ToDoProvider({ children }) {
     setLists((prev) => [...prev, { nome, id, cor }]);
     closeForm();
   }
+  
+  function addTodo(formData) {
+    const nomeTodo = formData.get("nomeTodo");
+    const prioridade = formData.get("prioridade");
+    const idTodo = crypto.randomUUID();
+    setTodos((prev) => [...prev, {nomeTodo, prioridade, idTodo}]);
+    closeForm();
+  }
+
 
   return (
     <ToDoContext
@@ -48,6 +59,8 @@ export function ToDoProvider({ children }) {
         selectedList,
         setSelectedList,
         activeForm,
+        toDos,
+        addTodo,
       }}
     >
       {children}

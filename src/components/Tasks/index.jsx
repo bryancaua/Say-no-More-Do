@@ -6,10 +6,19 @@ import ToDoContext from "../ToDoProvider/ToDoContext";
 import { Form } from "../Form";
 import { Input } from "../Input";
 import { FormHeader } from "../FormHeader";
+import { CardTitle } from "../CardTitle";
 
 export function Tasks() {
-  const { alterarCor, openForm, lists, selectedList, setSelectedList } =
-    use(ToDoContext);
+  const {
+    alterarCor,
+    openForm,
+    lists,
+    selectedList,
+    setSelectedList,
+    addList,
+    addTodo,
+    toDos,
+  } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -18,7 +27,21 @@ export function Tasks() {
     return `rgba(${r}, ${g}, ${b}, ${opacidade})`;
   }
 
-  console.log(selectedList);
+  const prioridadesTodo = {
+    Alta: 1,
+    Média: 2,
+    Baixa: 3,
+  };
+
+  const prioridadesCoresTodo = {
+    Alta: "#ef4444",
+    Média: "#f59e0b",
+    Baixa: "#22c55e",
+  };
+
+  const toDosOrdenados = [...toDos].sort((a, b) => {
+    return prioridadesTodo[a.prioridade] - prioridadesTodo[b.prioridade];
+  });
 
   return (
     <>
@@ -78,7 +101,7 @@ export function Tasks() {
             <Button onClick={() => openForm("list")}>+ Adicionar lista</Button>
           </div>
 
-          <Form name="list">
+          <Form name="list" addFunction={addList}>
             <FormHeader>Criar lista</FormHeader>
             <Input
               name="nome"
@@ -99,15 +122,45 @@ export function Tasks() {
 
           <div className={styles.cardWrapper}>
             <Card>
-              <div>
-                <li>a</li>
-                <li>a</li>
-                <li>a</li>
-                <li>a</li>
-                <li>a</li>
-                <li>a</li>
-                <li>a</li>
-              </div>
+              <CardTitle>
+                {lists.map(({ nome, id, cor }) => {
+                  if (selectedList === id) {
+                    return (
+                      <div
+                        key={id}
+                        className={styles.divListTitle}
+                      >
+                        <span
+                          className={styles.bolinha}
+                          style={{ backgroundColor: cor }}
+                        />
+                        <h3>{nome}</h3>
+                      </div>
+                    );
+                  }
+                })}
+              </CardTitle>
+              <ul className={styles.ulTodo}>
+                {toDosOrdenados.map(({ nomeTodo, idTodo, prioridade }) => {
+                  return (
+                    <div className={styles.todoElement} key={idTodo}>
+                      <li className={styles.todoLi}>
+                        <input type="checkbox" />
+                        <p style={{fontWeight: "500", fontSize: "14px"}}>{nomeTodo}</p>
+                        <p
+                          className={styles.prioridadeTodo}
+                          style={{
+                            "--color-priority":
+                              prioridadesCoresTodo[prioridade],
+                          }}
+                        >
+                          {prioridade}
+                        </p>
+                      </li>
+                    </div>
+                  );
+                })}
+              </ul>
 
               <div className={styles.div}>
                 <div className={styles.divFilters}>
@@ -129,18 +182,19 @@ export function Tasks() {
                 </Button>
               </div>
 
-              <Form name="todo">
+              <Form name="todo" addFunction={addTodo}>
                 <FormHeader>Criar To-Do</FormHeader>
                 <Input
-                  name="nome"
+                  name="nomeTodo"
                   placeholder="Digite o nome do seu to-do..."
                   required
                 />
-              <select name="prioridade" id="?">
-                <option value="">baixa</option>
-                <option value="">normal</option>
-                <option value="">alta</option>
-              </select>
+                <select name="prioridade" defaultValue="baixa">
+                  <option value="Alta">Alta</option>
+                  <option value="Média">Média</option>
+                  <option value="Baixa">Baixa</option>
+                </select>
+                <Button type="submit">Enviar</Button>
               </Form>
             </Card>
           </div>

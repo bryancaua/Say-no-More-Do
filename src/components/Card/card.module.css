@@ -1,11 +1,10 @@
 .div {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   width: 100%;
   min-height: 200px;
   background-color: #fff;
-  border-radius: 30px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  padding: 1.5rem;
+  border: solid 1px #E5E3EE;
+  border-radius: 18px;
+box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
