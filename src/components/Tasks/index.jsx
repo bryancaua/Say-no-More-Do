@@ -16,8 +16,7 @@ export function Tasks() {
     selectedList,
     setSelectedList,
     addList,
-    addTodo,
-    toDos,
+    addTodo, 
   } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
@@ -26,6 +25,8 @@ export function Tasks() {
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${opacidade})`;
   }
+
+  console.log(lists)
 
   const prioridadesTodo = {
     Alta: 1,
@@ -39,9 +40,13 @@ export function Tasks() {
     Baixa: "#22c55e",
   };
 
-  const toDosOrdenados = [...toDos].sort((a, b) => {
+  const listaAtual = lists.find((lista) => lista.id === selectedList);
+
+  const toDosOrdenados = listaAtual ? listaAtual.todos.sort((a, b) => {
     return prioridadesTodo[a.prioridade] - prioridadesTodo[b.prioridade];
-  });
+  }) : [];
+
+  console.log(toDosOrdenados)
 
   return (
     <>
@@ -181,7 +186,6 @@ export function Tasks() {
                   + Add
                 </Button>
               </div>
-
               <Form name="todo" addFunction={addTodo}>
                 <FormHeader>Criar To-Do</FormHeader>
                 <Input
