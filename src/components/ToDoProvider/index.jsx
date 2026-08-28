@@ -5,9 +5,8 @@ const list = [];
 
 export function ToDoProvider({ children }) {
   const [lists, setLists] = useState(list);
-  const [selectedList, setSelectedList]= useState(null);
+  const [selectedList, setSelectedList] = useState(null);
   const [activeForm, setActiveForm] = useState(null);
-  //const [toDos, setTodos] = useState(todo);
 
   function openForm(name) {
     setActiveForm(name);
@@ -25,7 +24,6 @@ export function ToDoProvider({ children }) {
     );
   }
 
-
   function addList(formData) {
     const nome = formData.get("nome");
     const cor = formData.get("cor");
@@ -33,20 +31,73 @@ export function ToDoProvider({ children }) {
     setLists((prev) => [...prev, { nome, id, cor, todos: [] }]);
     closeForm();
   }
-  
+
   function addTodo(formData) {
     const nomeTodo = formData.get("nomeTodo");
     const prioridade = formData.get("prioridade");
     const idTodo = crypto.randomUUID();
-    setLists((prev) => 
-      prev.map((list) => 
+    setLists((prev) =>
+      prev.map((list) =>
         list.id === selectedList
-        ?  {...list, todos: [...list.todos, {nomeTodo, prioridade, idTodo}]} :
-        list
-      ))
+          ? {
+              ...list,
+              todos: [
+                ...list.todos,
+                { nomeTodo, prioridade, idTodo, concluido: false },
+              ],
+            }
+          : list
+      )
+    );
     closeForm();
   }
 
+  const prioridadesTodo = {
+    Alta: 1,
+    Média: 2,
+    Baixa: 3,
+  };
+
+  const prioridadesCoresTodo = {
+    Alta: "#ef4444",
+    Média: "#f59e0b",
+    Baixa: "#22c55e",
+  };
+
+  const listaAtual = lists.find((lista) => lista.id === selectedList);
+
+  const toDosOrdenados = listaAtual
+    ? listaAtual.todos.sort((a, b) => {
+        return prioridadesTodo[a.prioridade] - prioridadesTodo[b.prioridade];
+      })
+    : [];
+
+  function completeTodo(idTodo) {
+    setLists((prev) =>
+      prev.map((list) =>
+        list.id === selectedList
+          ? {
+              ...list,
+              todos: list.todos.map((todo) =>
+                todo.idTodo === idTodo
+                  ? { ...todo, concluido: !todo.concluido }
+                  : todo
+              ),
+            }
+          : list
+      )
+    );
+  }
+
+  const hasLists = lists.length > 0;
+  const hasSelection = Boolean(listaAtual);
+
+  const totalTodos = listaAtual ? listaAtual.todos.length : 0;
+  const todosConcluidos = listaAtual
+    ? listaAtual.todos.filter((t) => t.concluido).length
+    : 0;
+  const porcentagem =
+    totalTodos === 0 ? 0 : (todosConcluidos / totalTodos) * 100;
 
   return (
     <ToDoContext
@@ -60,6 +111,14 @@ export function ToDoProvider({ children }) {
         setSelectedList,
         activeForm,
         addTodo,
+        completeTodo,
+        toDosOrdenados,
+        prioridadesCoresTodo,
+        hasLists,
+        hasSelection,
+        porcentagem,
+        totalTodos,
+        todosConcluidos,
       }}
     >
       {children}

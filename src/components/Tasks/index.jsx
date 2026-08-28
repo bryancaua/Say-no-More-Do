@@ -16,7 +16,15 @@ export function Tasks() {
     selectedList,
     setSelectedList,
     addList,
-    addTodo, 
+    addTodo,
+    completeTodo,
+    prioridadesCoresTodo,
+    toDosOrdenados,
+    porcentagem,
+    totalTodos,
+    todosConcluidos,
+    hasLists,
+    hasSelection,
   } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
@@ -26,33 +34,15 @@ export function Tasks() {
     return `rgba(${r}, ${g}, ${b}, ${opacidade})`;
   }
 
-  console.log(lists)
-
-  const prioridadesTodo = {
-    Alta: 1,
-    Média: 2,
-    Baixa: 3,
-  };
-
-  const prioridadesCoresTodo = {
-    Alta: "#ef4444",
-    Média: "#f59e0b",
-    Baixa: "#22c55e",
-  };
-
-  const listaAtual = lists.find((lista) => lista.id === selectedList);
-
-  const toDosOrdenados = listaAtual ? listaAtual.todos.sort((a, b) => {
-    return prioridadesTodo[a.prioridade] - prioridadesTodo[b.prioridade];
-  }) : [];
-
-  console.log(toDosOrdenados)
-
   return (
     <>
       <section className={styles.section}>
         <header className={styles.header}>
-          <h1 className={styles.h1}>Você ainda não possui listas criadas</h1>
+          <h1 className={styles.h1}>
+            {hasLists
+              ? "Selecione uma lista, vamos concluir tudo!"
+              : "Não há listas criadas ainda, crie uma para começar"}
+          </h1>
           <p className={styles.p}>Organize e conclua o que importa.</p>
         </header>
 
@@ -131,61 +121,105 @@ export function Tasks() {
                 {lists.map(({ nome, id, cor }) => {
                   if (selectedList === id) {
                     return (
-                      <div
-                        key={id}
-                        className={styles.divListTitle}
-                      >
+                      <div key={id} className={styles.divListTitle}>
                         <span
                           className={styles.bolinha}
                           style={{ backgroundColor: cor }}
                         />
                         <h3>{nome}</h3>
+
+                        <p className={styles.todoPendencias} style={{color: porcentagem === 100 ? "green" : ""}}>
+                          {todosConcluidos} de {totalTodos} concluídas
+                        </p>
                       </div>
                     );
                   }
                 })}
+
+                {hasSelection && (
+                  <div className={styles.barraFundo}>
+                    <div
+                      className={styles.barraPreenchida}
+                      style={{ width: `${porcentagem}%` }}
+                    />
+                  </div>
+                )}
+
+                {!hasSelection && (
+                  <p
+                    className={styles.p}
+                    style={{
+                      alignSelf: "center",
+                      justifySelf: "center",
+                      margin: "1rem",
+                    }}
+                  >
+                    {!hasLists
+                      ? "Crie uma lista para começar"
+                      : "Selecione uma lista para começar"}
+                  </p>
+                )}
               </CardTitle>
               <ul className={styles.ulTodo}>
-                {toDosOrdenados.map(({ nomeTodo, idTodo, prioridade }) => {
-                  return (
-                    <div className={styles.todoElement} key={idTodo}>
-                      <li className={styles.todoLi}>
-                        <input type="checkbox" />
-                        <p style={{fontWeight: "500", fontSize: "14px"}}>{nomeTodo}</p>
-                        <p
-                          className={styles.prioridadeTodo}
-                          style={{
-                            "--color-priority":
-                              prioridadesCoresTodo[prioridade],
-                          }}
-                        >
-                          {prioridade}
-                        </p>
-                      </li>
-                    </div>
-                  );
-                })}
+                {toDosOrdenados.map(
+                  ({ nomeTodo, idTodo, prioridade, concluido }) => {
+                    return (
+                      <div className={styles.todoElement} key={idTodo}>
+                        <li className={styles.todoLi}>
+                          <input
+                            type="checkbox"
+                            checked={concluido}
+                            onChange={() => completeTodo(idTodo)}
+                          />
+                          <p
+                            style={{
+                              fontWeight: "500",
+                              fontSize: "14px",
+                              textDecorationLine:
+                                concluido === true ? "line-through" : "none",
+                              opacity: concluido === true ? "40%" : "100%",
+                            }}
+                          >
+                            {nomeTodo}
+                          </p>
+                          <p
+                            className={styles.prioridadeTodo}
+                            style={{
+                              "--color-priority":
+                                prioridadesCoresTodo[prioridade],
+                            }}
+                          >
+                            {prioridade}
+                          </p>
+                        </li>
+                      </div>
+                    );
+                  }
+                )}
               </ul>
 
-              <div className={styles.div}>
-                <div className={styles.divFilters}>
-                  <Button>
-                    <p>Todas</p>
-                  </Button>
-                  <Button>
-                    <p>Pendentes</p>
-                  </Button>
-                  <Button>
-                    <p>Finalizadas</p>
+              {hasSelection && (
+                <div className={styles.div}>
+                  <div className={styles.divFilters}>
+                    <Button>
+                      <p>Todas</p>
+                    </Button>
+                    <Button>
+                      <p>Pendentes</p>
+                    </Button>
+                    <Button>
+                      <p>Finalizadas</p>
+                    </Button>
+                  </div>
+                  <Button
+                    style={{ width: "15%" }}
+                    onClick={() => openForm("todo")}
+                  >
+                    + Add
                   </Button>
                 </div>
-                <Button
-                  style={{ width: "15%" }}
-                  onClick={() => openForm("todo")}
-                >
-                  + Add
-                </Button>
-              </div>
+              )}
+
               <Form name="todo" addFunction={addTodo}>
                 <FormHeader>Criar To-Do</FormHeader>
                 <Input
