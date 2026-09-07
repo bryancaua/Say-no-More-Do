@@ -19,12 +19,14 @@ export function Tasks() {
     addTodo,
     completeTodo,
     prioridadesCoresTodo,
-    toDosOrdenados,
+    filterTodos,
     porcentagem,
     totalTodos,
     todosConcluidos,
     hasLists,
     hasSelection,
+    listaAtual,
+    setSelectedFilter
   } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
@@ -33,6 +35,8 @@ export function Tasks() {
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${opacidade})`;
   }
+
+console.log(listaAtual?.cor);
 
   return (
     <>
@@ -116,7 +120,7 @@ export function Tasks() {
           </Form>
 
           <div className={styles.cardWrapper}>
-            <Card>
+            <Card style={{"--color-list": listaAtual?.cor}}>
               <CardTitle>
                 {lists.map(({ nome, id, cor }) => {
                   if (selectedList === id) {
@@ -161,7 +165,7 @@ export function Tasks() {
                 )}
               </CardTitle>
               <ul className={styles.ulTodo}>
-                {toDosOrdenados.map(
+                {filterTodos.map(
                   ({ nomeTodo, idTodo, prioridade, concluido }) => {
                     return (
                       <div className={styles.todoElement} key={idTodo}>
@@ -201,13 +205,13 @@ export function Tasks() {
               {hasSelection && (
                 <div className={styles.div}>
                   <div className={styles.divFilters}>
-                    <Button>
+                    <Button onClick={() => setSelectedFilter("todas")}>
                       <p>Todas</p>
                     </Button>
-                    <Button>
+                    <Button onClick={() => setSelectedFilter("pendentes")}>
                       <p>Pendentes</p>
                     </Button>
-                    <Button>
+                    <Button onClick={() => setSelectedFilter("concluidas")}>
                       <p>Finalizadas</p>
                     </Button>
                   </div>

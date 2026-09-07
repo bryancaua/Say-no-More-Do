@@ -7,6 +7,7 @@ export function ToDoProvider({ children }) {
   const [lists, setLists] = useState(list);
   const [selectedList, setSelectedList] = useState(null);
   const [activeForm, setActiveForm] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState("todas");
 
   function openForm(name) {
     setActiveForm(name);
@@ -99,6 +100,12 @@ export function ToDoProvider({ children }) {
   const porcentagem =
     totalTodos === 0 ? 0 : (todosConcluidos / totalTodos) * 100;
 
+  const filterTodos = toDosOrdenados.filter((todo) => {
+    if (selectedFilter === "todas") return true;
+    if (selectedFilter === "pendentes") return !todo.concluido;
+    if (selectedFilter === "concluidas") return todo.concluido;
+  })
+
   return (
     <ToDoContext
       value={{
@@ -118,7 +125,10 @@ export function ToDoProvider({ children }) {
         hasSelection,
         porcentagem,
         totalTodos,
+        listaAtual,
         todosConcluidos,
+        setSelectedFilter,
+        filterTodos
       }}
     >
       {children}
