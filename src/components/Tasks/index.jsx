@@ -26,7 +26,7 @@ export function Tasks() {
     hasLists,
     hasSelection,
     listaAtual,
-    setSelectedFilter
+    setSelectedFilter,
   } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
@@ -36,7 +36,7 @@ export function Tasks() {
     return `rgba(${r}, ${g}, ${b}, ${opacidade})`;
   }
 
-console.log(listaAtual?.cor);
+  console.log(listaAtual?.cor);
 
   return (
     <>
@@ -120,7 +120,7 @@ console.log(listaAtual?.cor);
           </Form>
 
           <div className={styles.cardWrapper}>
-            <Card style={{"--color-list": listaAtual?.cor}}>
+            <Card style={{ "--color-list": listaAtual?.cor }}>
               <CardTitle>
                 {lists.map(({ nome, id, cor }) => {
                   if (selectedList === id) {
@@ -132,7 +132,10 @@ console.log(listaAtual?.cor);
                         />
                         <h3>{nome}</h3>
 
-                        <p className={styles.todoPendencias} style={{color: porcentagem === 100 ? "green" : ""}}>
+                        <p
+                          className={styles.todoPendencias}
+                          style={{ color: porcentagem === 100 ? "green" : "" }}
+                        >
                           {todosConcluidos} de {totalTodos} concluídas
                         </p>
                       </div>
@@ -231,7 +234,12 @@ console.log(listaAtual?.cor);
                   placeholder="Digite o nome do seu to-do..."
                   required
                 />
-                <select name="prioridade" defaultValue="baixa">
+                <p className={styles.p}>Selecione a prioridade do seu To-Do</p>
+                <select
+                  name="prioridade"
+                  defaultValue="Baixa"
+                  className={styles.selectPrioridade}
+                >
                   <option value="Alta">Alta</option>
                   <option value="Média">Média</option>
                   <option value="Baixa">Baixa</option>

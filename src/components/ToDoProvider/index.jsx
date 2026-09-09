@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToDoContext from "./ToDoContext";
 
-const list = [];
 
 export function ToDoProvider({ children }) {
-  const [lists, setLists] = useState(list);
+  const [lists, setLists] = useState(() => {
+    const savedLists = localStorage.getItem("lists");
+    return savedLists ? JSON.parse(savedLists) : []
+  });
   const [selectedList, setSelectedList] = useState(null);
   const [activeForm, setActiveForm] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("todas");
+
+  useEffect(() => {
+    localStorage.setItem("lists", JSON.stringify(lists))
+  }, [lists])
 
   function openForm(name) {
     setActiveForm(name);
