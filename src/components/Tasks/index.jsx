@@ -8,9 +8,12 @@ import { Input } from "../Input";
 import { FormHeader } from "../FormHeader";
 import { CardTitle } from "../CardTitle";
 
+import { ScrollText } from "lucide-react";
+
 export function Tasks() {
   const {
     alterarCor,
+    alterarDescricao,
     openForm,
     lists,
     selectedList,
@@ -122,23 +125,36 @@ export function Tasks() {
           <div className={styles.cardWrapper}>
             <Card style={{ "--color-list": listaAtual?.cor }}>
               <CardTitle>
-                {lists.map(({ nome, id, cor }) => {
+                {lists.map(({ nome, id, cor, descricao }) => {
                   if (selectedList === id) {
                     return (
-                      <div key={id} className={styles.divListTitle}>
-                        <span
-                          className={styles.bolinha}
-                          style={{ backgroundColor: cor }}
-                        />
-                        <h3>{nome}</h3>
+                      <>
+                        <div key={id} className={styles.divListTitle}>
+                          <span
+                            className={styles.bolinha}
+                            style={{ backgroundColor: cor }}
+                          />
+                          <h3>{nome}</h3>
+                          <ScrollText size={"1rem"} color={cor}/>
+                          <p
+                            className={styles.todoPendencias}
+                            style={{
+                              color: porcentagem === 100 ? "green" : "",
+                            }}
+                          >
+                            {todosConcluidos} de {totalTodos} concluídas
+                          </p>
+                        </div>
 
-                        <p
-                          className={styles.todoPendencias}
-                          style={{ color: porcentagem === 100 ? "green" : "" }}
+                        <textarea
+                          onChange={(e) => alterarDescricao(id, e.target.value)}
+                          className={styles.listTextArea}
+                          name="descricao"
+                          maxLength={500}
                         >
-                          {todosConcluidos} de {totalTodos} concluídas
-                        </p>
-                      </div>
+                          {descricao}
+                        </textarea>
+                      </>
                     );
                   }
                 })}

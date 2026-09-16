@@ -75,6 +75,32 @@
   width: 90%;
 }
 
+.listTextArea {
+  margin: 1rem;
+  min-height: 80px;
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff1f126;
+  resize: vertical;
+  overflow-y: auto;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.listTextArea:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: rgba(124, 58, 237, 0.1) 0px 7px 29px 0px; ;
+}
+
+.listTextArea::placeholder {
+  color: #999;
+}
+
 .cardWrapper {
   flex: 1;
   display: flex;
@@ -169,6 +195,7 @@
   display: flex;
   gap: 0.8rem;
   align-items: center;
+  justify-content: center;
   margin: 1rem 1.4rem;
 }
 
@@ -188,9 +215,26 @@
 }
 
 .ulTodo {
+  max-height: 350px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #413d4ec7 transparent;
   display: flex;
   flex-direction: column;
   list-style: none;
+}
+
+.ulTodo::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ulTodol::-webkit-scrollbar-thumb {
+  background-color: #413d4ec7;
+  border-radius: 10px;
+}
+
+.ulTodo::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 input[type="checkbox"] {

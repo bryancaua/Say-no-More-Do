@@ -21,7 +21,7 @@ export function ToDoProvider({ children }) {
 
   function closeForm() {
     setActiveForm(null);
-  }
+  } 
 
   function alterarCor(id, novaCor) {
     setLists((prev) =>
@@ -31,11 +31,19 @@ export function ToDoProvider({ children }) {
     );
   }
 
+  function alterarDescricao(id, descricao) {
+    setLists((prev) =>
+      prev.map((lista) => 
+        lista.id === id ? {...lista, descricao: descricao} : lista
+      )
+  )
+  }
+
   function addList(formData) {
     const nome = formData.get("nome");
     const cor = formData.get("cor");
     const id = crypto.randomUUID();
-    setLists((prev) => [...prev, { nome, id, cor, todos: [] }]);
+    setLists((prev) => [...prev, { nome, id, cor, todos: [], descricao: "" }]);
     closeForm();
   }
 
@@ -119,6 +127,7 @@ export function ToDoProvider({ children }) {
         lists,
         closeForm,
         alterarCor,
+        alterarDescricao,
         openForm,
         selectedList,
         setSelectedList,

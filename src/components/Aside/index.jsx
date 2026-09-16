@@ -15,13 +15,12 @@ const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboardIcon },
   { id: "tarefas", label: "Tarefas", icon: CheckSquare },
   { id: "metas", label: "Metas", icon: Target },
-  { id: "hábitos", label: "Hábitos", icon: FlameIcon },
-  { id: "relatórios", label: "Relatórios", icon: ChartNoAxesColumn },
+  { id: "habitos", label: "Hábitos", icon: FlameIcon },
+  { id: "relatorios", label: "Relatórios", icon: ChartNoAxesColumn },
 ];
 
 export function Aside() {
   const [collapsed, setCollapsed] = useState(true);
-  const [selected, setSelected] = useState("dashboard");
 
   return (
     <aside
@@ -36,25 +35,14 @@ export function Aside() {
       <img src={logo} alt="" className={styles.img} />
 
       <nav className={styles.nav}>
-        {navItems.map(({ id, label, icon: Icon }) => (
+        {navItems.map(({ id, icon, label }) => (
           <IconButton
-            selected={selected}
-            collapsed={collapsed}
-            id={id}
-            key={id}
-            onClick={() => setSelected(id)}
+          key={id}
+          id={id}
+          label={label}
+          Icon={icon}
+          collapsed={collapsed}
           >
-            <div className={styles.icon_wrapper}>
-              <Icon
-                strokeWidth={1.8}
-                className={`${
-                  selected === id ? styles.icons_selected : styles.icons
-                }`}
-              />
-            </div>
-            <p className={`${selected === id ? styles.p_selected : styles.p} ${collapsed ? styles.p_collapsed : ""}`}>
-              {label}
-            </p>
           </IconButton>
         ))}
       </nav>
