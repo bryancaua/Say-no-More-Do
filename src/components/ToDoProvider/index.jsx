@@ -10,6 +10,18 @@ export function ToDoProvider({ children }) {
   const [selectedList, setSelectedList] = useState(null);
   const [activeForm, setActiveForm] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("todas");
+  const [descriptionChange, setDescriptionChange] = useState(false);
+  const [isRotated, setIsRotated] = useState(false)
+
+  function abreDescricao() {
+    setDescriptionChange(!descriptionChange)
+    setIsRotated(!isRotated)
+  }
+
+  function handleClickDelete(id) {
+    const novasListas = lists.filter(list => list.id !== id);
+    setLists(novasListas)
+  }
 
   useEffect(() => {
     localStorage.setItem("lists", JSON.stringify(lists))
@@ -31,7 +43,7 @@ export function ToDoProvider({ children }) {
     );
   }
 
-  function alterarDescricao(id, descricao) {
+  function atualizaDescricao(id, descricao) {
     setLists((prev) =>
       prev.map((lista) => 
         lista.id === id ? {...lista, descricao: descricao} : lista
@@ -127,7 +139,7 @@ export function ToDoProvider({ children }) {
         lists,
         closeForm,
         alterarCor,
-        alterarDescricao,
+        atualizaDescricao,
         openForm,
         selectedList,
         setSelectedList,
@@ -142,8 +154,13 @@ export function ToDoProvider({ children }) {
         totalTodos,
         listaAtual,
         todosConcluidos,
+        selectedFilter,
         setSelectedFilter,
-        filterTodos
+        filterTodos,
+        abreDescricao,
+        isRotated,
+        descriptionChange,
+        handleClickDelete
       }}
     >
       {children}

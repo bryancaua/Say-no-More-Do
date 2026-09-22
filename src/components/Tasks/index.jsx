@@ -8,12 +8,12 @@ import { Input } from "../Input";
 import { FormHeader } from "../FormHeader";
 import { CardTitle } from "../CardTitle";
 
-import { ScrollText } from "lucide-react";
+import { ArrowUpIcon, ScrollText, Trash2Icon } from "lucide-react";
 
 export function Tasks() {
   const {
     alterarCor,
-    alterarDescricao,
+    atualizaDescricao,
     openForm,
     lists,
     selectedList,
@@ -29,7 +29,12 @@ export function Tasks() {
     hasLists,
     hasSelection,
     listaAtual,
+    selectedFilter,
     setSelectedFilter,
+    abreDescricao,
+    isRotated,
+    descriptionChange,
+    handleClickDelete,
   } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
@@ -39,7 +44,7 @@ export function Tasks() {
     return `rgba(${r}, ${g}, ${b}, ${opacidade})`;
   }
 
-  console.log(listaAtual?.cor);
+  console.log(isRotated)
 
   return (
     <>
@@ -95,6 +100,12 @@ export function Tasks() {
                       >
                         {nome}
                       </p>
+                      <Trash2Icon
+                        color="red"
+                        className={styles.trashIcon}
+                        size={15}
+                        onClick={() => handleClickDelete(id)}
+                      />
                     </button>
                   </li>
                 );
@@ -128,14 +139,32 @@ export function Tasks() {
                 {lists.map(({ nome, id, cor, descricao }) => {
                   if (selectedList === id) {
                     return (
-                      <>
-                        <div key={id} className={styles.divListTitle}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "100%",
+                          minHeight: "30px",
+                        }}
+                        key={id}
+                      >
+                        <div className={styles.divListTitle}>
                           <span
                             className={styles.bolinha}
                             style={{ backgroundColor: cor }}
                           />
                           <h3>{nome}</h3>
-                          <ScrollText size={"1rem"} color={cor}/>
+                          <ScrollText
+                            size={"1rem"}
+                            color={cor}
+                          />
+                          <ArrowUpIcon 
+                            size={"1rem"}
+                            color={cor}
+                            className={`${styles.arrow} ${isRotated ? styles.rotated : ""}`}
+                            role="button"
+                            onClick={() => abreDescricao()}
+                          />
                           <p
                             className={styles.todoPendencias}
                             style={{
@@ -147,14 +176,23 @@ export function Tasks() {
                         </div>
 
                         <textarea
-                          onChange={(e) => alterarDescricao(id, e.target.value)}
+                          onChange={(e) =>
+                            atualizaDescricao(id, e.target.value)
+                          }
                           className={styles.listTextArea}
+                          style={
+                            descriptionChange === true
+                              ? { display: "block" }
+                              : { display: "none" }
+                          }
                           name="descricao"
-                          maxLength={500}
+                          maxLength={700}
+                          value={descricao}
+                          placeholder="Deseja criar uma descrição para suas tarefas?"
                         >
                           {descricao}
                         </textarea>
-                      </>
+                      </div>
                     );
                   }
                 })}
@@ -183,6 +221,7 @@ export function Tasks() {
                   </p>
                 )}
               </CardTitle>
+
               <ul className={styles.ulTodo}>
                 {filterTodos.map(
                   ({ nomeTodo, idTodo, prioridade, concluido }) => {
@@ -224,13 +263,13 @@ export function Tasks() {
               {hasSelection && (
                 <div className={styles.div}>
                   <div className={styles.divFilters}>
-                    <Button onClick={() => setSelectedFilter("todas")}>
+                    <Button onClick={() => setSelectedFilter("todas")} style={ selectedFilter === "todas" ? {backgroundColor: "#8b7cf6" } : {}}>
                       <p>Todas</p>
                     </Button>
-                    <Button onClick={() => setSelectedFilter("pendentes")}>
+                    <Button onClick={() => setSelectedFilter("pendentes")} style={ selectedFilter === "pendentes" ? {backgroundColor: "#8b7cf6" } : {}}>
                       <p>Pendentes</p>
                     </Button>
-                    <Button onClick={() => setSelectedFilter("concluidas")}>
+                    <Button onClick={() => setSelectedFilter("concluidas")} style={ selectedFilter === "concluidas" ? {backgroundColor: "#8b7cf6" } : {}}>
                       <p>Finalizadas</p>
                     </Button>
                   </div>
