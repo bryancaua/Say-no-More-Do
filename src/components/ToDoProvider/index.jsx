@@ -16,7 +16,6 @@ export function ToDoProvider({ children }) {
   function handleClickLists(id) {
     setSelectedList(id);
     setSelectedFilter("todas");
-    setMensagemFiltro("");
   }
 
   function abreDescricao() {
@@ -138,24 +137,30 @@ export function ToDoProvider({ children }) {
     if (selectedFilter === "concluidas") return todo.concluido;
   })
 
-const [mensagemFiltro, setMensagemFiltro] = useState("");
-
-function atualizaFiltro(filterParam) {
-  setSelectedFilter(filterParam);
+function getMensagemFiltro(filterParam, lista) {
+  if (!lista) return "";
 
   if (filterParam === "concluidas") {
-    const concluidasCount = listaAtual?.todos.filter(t => t.concluido).length;
-    setMensagemFiltro(concluidasCount === 0 ? "Nenhuma tarefa concluída" : "");
+    const count = lista.todos.filter((t) => t.concluido).length;
+    return count === 0 ? "Nenhuma tarefa concluída" : "";
   }
 
   if (filterParam === "pendentes") {
-    const pendentesCount = listaAtual?.todos.filter(t => !t.concluido).length;
-    setMensagemFiltro(pendentesCount === 0 ? "Nenhuma tarefa pendente" : "");
+    const count = lista.todos.filter((t) => !t.concluido).length;
+    return count === 0 ? "Nenhuma tarefa pendente" : "";
   }
 
   if (filterParam === "todas") {
-    setMensagemFiltro(null);
+    return lista.todos.length === 0 ? "Crie uma tarefa para começar!" : "";
   }
+
+  return "";
+}
+
+const mensagemFiltro = getMensagemFiltro(selectedFilter, listaAtual);
+
+function atualizaFiltro(filterParam) {
+  setSelectedFilter(filterParam);
 }
 
   return (
