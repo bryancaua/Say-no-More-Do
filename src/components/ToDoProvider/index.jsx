@@ -11,7 +11,7 @@ export function ToDoProvider({ children }) {
   const [activeForm, setActiveForm] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("todas");
   const [descriptionChange, setDescriptionChange] = useState(false);
-  const [isRotated, setIsRotated] = useState(false)
+  const [isRotated, setIsRotated] = useState(false);
 
   function abreDescricao() {
     setDescriptionChange(!descriptionChange)
@@ -132,6 +132,26 @@ export function ToDoProvider({ children }) {
     if (selectedFilter === "concluidas") return todo.concluido;
   })
 
+const [mensagemFiltro, setMensagemFiltro] = useState("");
+
+function atualizaFiltro(filterParam) {
+  setSelectedFilter(filterParam);
+
+  if (filterParam === "concluidas") {
+    const concluidasCount = listaAtual?.todos.filter(t => t.concluido).length;
+    setMensagemFiltro(concluidasCount === 0 ? "Nenhuma tarefa concluída" : "");
+  }
+
+  if (filterParam === "pendentes") {
+    const pendentesCount = listaAtual?.todos.filter(t => !t.concluido).length;
+    setMensagemFiltro(pendentesCount === 0 ? "Nenhuma tarefa pendente" : "");
+  }
+
+  if (filterParam === "todas") {
+    setMensagemFiltro(null);
+  }
+}
+
   return (
     <ToDoContext
       value={{
@@ -160,7 +180,9 @@ export function ToDoProvider({ children }) {
         abreDescricao,
         isRotated,
         descriptionChange,
-        handleClickDelete
+        handleClickDelete,
+        atualizaFiltro,
+        mensagemFiltro
       }}
     >
       {children}

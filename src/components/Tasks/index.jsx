@@ -30,11 +30,12 @@ export function Tasks() {
     hasSelection,
     listaAtual,
     selectedFilter,
-    setSelectedFilter,
     abreDescricao,
     isRotated,
     descriptionChange,
     handleClickDelete,
+    atualizaFiltro,
+    mensagemFiltro,
   } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
@@ -43,8 +44,6 @@ export function Tasks() {
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${opacidade})`;
   }
-
-  console.log(isRotated)
 
   return (
     <>
@@ -154,14 +153,13 @@ export function Tasks() {
                             style={{ backgroundColor: cor }}
                           />
                           <h3>{nome}</h3>
-                          <ScrollText
+                          <ScrollText size={"1rem"} color={cor} />
+                          <ArrowUpIcon
                             size={"1rem"}
                             color={cor}
-                          />
-                          <ArrowUpIcon 
-                            size={"1rem"}
-                            color={cor}
-                            className={`${styles.arrow} ${isRotated ? styles.rotated : ""}`}
+                            className={`${styles.arrow} ${
+                              isRotated ? styles.rotated : ""
+                            }`}
                             role="button"
                             onClick={() => abreDescricao()}
                           />
@@ -223,6 +221,15 @@ export function Tasks() {
               </CardTitle>
 
               <ul className={styles.ulTodo}>
+                {mensagemFiltro && (
+                  <p
+                    className={styles.p}
+                    style={{ alignSelf: "center", margin: "1rem" }}
+                  >
+                    {mensagemFiltro}
+                  </p>
+                )}
+
                 {filterTodos.map(
                   ({ nomeTodo, idTodo, prioridade, concluido }) => {
                     return (
@@ -263,13 +270,34 @@ export function Tasks() {
               {hasSelection && (
                 <div className={styles.div}>
                   <div className={styles.divFilters}>
-                    <Button onClick={() => setSelectedFilter("todas")} style={ selectedFilter === "todas" ? {backgroundColor: "#8b7cf6" } : {}}>
+                    <Button
+                      onClick={() => atualizaFiltro("todas")}
+                      style={
+                        selectedFilter === "todas"
+                          ? { backgroundColor: "#8b7cf6" }
+                          : {}
+                      }
+                    >
                       <p>Todas</p>
                     </Button>
-                    <Button onClick={() => setSelectedFilter("pendentes")} style={ selectedFilter === "pendentes" ? {backgroundColor: "#8b7cf6" } : {}}>
+                    <Button
+                      onClick={() => atualizaFiltro("pendentes")}
+                      style={
+                        selectedFilter === "pendentes"
+                          ? { backgroundColor: "#8b7cf6" }
+                          : {}
+                      }
+                    >
                       <p>Pendentes</p>
                     </Button>
-                    <Button onClick={() => setSelectedFilter("concluidas")} style={ selectedFilter === "concluidas" ? {backgroundColor: "#8b7cf6" } : {}}>
+                    <Button
+                      onClick={() => atualizaFiltro("concluidas")}
+                      style={
+                        selectedFilter === "concluidas"
+                          ? { backgroundColor: "#8b7cf6" }
+                          : {}
+                      }
+                    >
                       <p>Finalizadas</p>
                     </Button>
                   </div>
