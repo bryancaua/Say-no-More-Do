@@ -13,6 +13,12 @@ export function ToDoProvider({ children }) {
   const [descriptionChange, setDescriptionChange] = useState(false);
   const [isRotated, setIsRotated] = useState(false);
 
+  function handleClickLists(id) {
+    setSelectedList(id);
+    setSelectedFilter("todas");
+    setMensagemFiltro("");
+  }
+
   function abreDescricao() {
     setDescriptionChange(!descriptionChange)
     setIsRotated(!isRotated)
@@ -162,7 +168,6 @@ function atualizaFiltro(filterParam) {
         atualizaDescricao,
         openForm,
         selectedList,
-        setSelectedList,
         activeForm,
         addTodo,
         completeTodo,
@@ -175,14 +180,14 @@ function atualizaFiltro(filterParam) {
         listaAtual,
         todosConcluidos,
         selectedFilter,
-        setSelectedFilter,
         filterTodos,
         abreDescricao,
         isRotated,
         descriptionChange,
         handleClickDelete,
         atualizaFiltro,
-        mensagemFiltro
+        mensagemFiltro,
+        handleClickLists
       }}
     >
       {children}

@@ -17,7 +17,6 @@ export function Tasks() {
     openForm,
     lists,
     selectedList,
-    setSelectedList,
     addList,
     addTodo,
     completeTodo,
@@ -36,6 +35,7 @@ export function Tasks() {
     handleClickDelete,
     atualizaFiltro,
     mensagemFiltro,
+    handleClickLists
   } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
@@ -65,7 +65,7 @@ export function Tasks() {
                   <li
                     className={styles.li}
                     key={id}
-                    onClick={() => setSelectedList(id)}
+                    onClick={() => handleClickLists(id)}
                   >
                     <input
                       type="color"
