@@ -18,6 +18,7 @@ export function Tasks() {
     lists,
     selectedList,
     addList,
+    editLists,
     addTodo,
     completeTodo,
     prioridadesCoresTodo,
@@ -103,13 +104,49 @@ export function Tasks() {
                       >
                         {nome}
                       </p>
-                      <Trash2Icon
-                        color="red"
-                        className={styles.trashIcon}
-                        size={15}
-                        onClick={() => handleClickDelete(id)}
-                      />
+
+                      <div
+                        style={{
+                          display: "flex",
+                          marginLeft: "auto",
+                          justifyContent: "center",
+                          gap: "0.5rem",
+                        }}
+                      >
+                        <SquarePen
+                          size={"1rem"}
+                          color={cor}
+                          className={styles.actionIcons}
+                          onClick={() => openForm(id)}
+                        />
+                        <Trash2Icon
+                          color="red"
+                          className={styles.actionIcons}
+                          size={15}
+                          onClick={() => handleClickDelete(id)}
+                        />
+                      </div>
                     </button>
+
+                    <Form name={id} addFunction={editLists}>
+                      <FormHeader>Editar lista</FormHeader>
+                      <Input
+                        name="nome"
+                        placeholder="Digite o novo nome da sua lista..."
+                        required
+                        defaultValue={nome}
+                      />
+                      <div className={styles.colorSection}>
+                        <span className={styles.colorLabel}>
+                          Selecione a cor da sua lista
+                        </span>
+                        <div className={styles.colorPickerWrapper}>
+                          <Input name="cor" type="color" defaultValue={cor} />
+                        </div>
+                      </div>
+
+                      <Button type="submit">Enviar</Button>
+                    </Form>
                   </li>
                 );
               })}
@@ -267,16 +304,27 @@ export function Tasks() {
                             <SquarePen
                               size={"1rem"}
                               color={listaAtual.cor}
-                              style={{ cursor: "pointer" }}
+                              className={styles.actionIcons}
                               onClick={() => openEditMenu(idTodo)}
                             />
 
-                            {menuTodoAberto  === idTodo && (
-                              <div className={styles.todoMenu}  style={{ "--color-primary": listaAtual.cor }}>
-                                <button onClick={() => openForm(idTodo, nomeTodo, prioridade)}>
+                            {menuTodoAberto === idTodo && (
+                              <div
+                                className={styles.todoMenu}
+                                style={{ "--color-primary": listaAtual.cor }}
+                              >
+                                <button
+                                  onClick={() =>
+                                    openForm(idTodo, nomeTodo, prioridade)
+                                  }
+                                >
                                   Editar
                                 </button>
-                                <button onClick={() => handleClickDeleteTodo(idTodo)}>Excluir</button>
+                                <button
+                                  onClick={() => handleClickDeleteTodo(idTodo)}
+                                >
+                                  Excluir
+                                </button>
                               </div>
                             )}
 

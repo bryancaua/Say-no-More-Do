@@ -64,6 +64,21 @@ export function ToDoProvider({ children }) {
     closeForm();
   }
 
+  function editLists(formData) {
+    const nome = formData.get("nome");
+    const cor = formData.get("cor");
+
+    setLists((prev) => 
+      prev.map((list) =>
+        list.id === selectedList ?
+          {...list, nome: nome, cor: cor}
+      : list 
+      ) 
+    )
+    
+    closeForm();
+  }
+
   function addTodo(formData) {
     const nomeTodo = formData.get("nomeTodo");
     const prioridade = formData.get("prioridade");
@@ -214,6 +229,7 @@ export function ToDoProvider({ children }) {
         atualizaDescricao,
         openForm,
         selectedList,
+        editLists,
         activeForm,
         addTodo,
         completeTodo,
