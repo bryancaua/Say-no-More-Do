@@ -231,6 +231,34 @@
   align-items: center;
 }
 
+.todoMenu {
+  background-color: var(--color-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+  z-index: 10;
+  transition: ease-in-out 0.3s;
+}
+
+.todoMenu button {
+  padding: 0.5rem 0.8rem;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-card-bg);
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.todoMenu button:hover {
+  background-color: #7c3aed;
+}
+
 .prioridadeTodo {
   font-size: 0.8rem;
   font-weight: 600;

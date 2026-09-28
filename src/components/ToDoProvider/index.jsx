@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import ToDoContext from "./ToDoContext";
 
-
 export function ToDoProvider({ children }) {
   const [lists, setLists] = useState(() => {
     const savedLists = localStorage.getItem("lists");
-    return savedLists ? JSON.parse(savedLists) : []
+    return savedLists ? JSON.parse(savedLists) : [];
   });
   const [selectedList, setSelectedList] = useState(null);
   const [activeForm, setActiveForm] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("todas");
   const [descriptionChange, setDescriptionChange] = useState(false);
   const [isRotated, setIsRotated] = useState(false);
+  const [menuTodoAberto, setMenuTodoAberto] = useState(null);
 
   function handleClickLists(id) {
     setSelectedList(id);
@@ -19,18 +19,18 @@ export function ToDoProvider({ children }) {
   }
 
   function abreDescricao() {
-    setDescriptionChange(!descriptionChange)
-    setIsRotated(!isRotated)
+    setDescriptionChange(!descriptionChange);
+    setIsRotated(!isRotated);
   }
 
   function handleClickDelete(id) {
-    const novasListas = lists.filter(list => list.id !== id);
-    setLists(novasListas)
+    const novasListas = lists.filter((list) => list.id !== id);
+    setLists(novasListas);
   }
 
   useEffect(() => {
-    localStorage.setItem("lists", JSON.stringify(lists))
-  }, [lists])
+    localStorage.setItem("lists", JSON.stringify(lists));
+  }, [lists]);
 
   function openForm(name) {
     setActiveForm(name);
@@ -38,7 +38,7 @@ export function ToDoProvider({ children }) {
 
   function closeForm() {
     setActiveForm(null);
-  } 
+  }
 
   function alterarCor(id, novaCor) {
     setLists((prev) =>
@@ -50,10 +50,10 @@ export function ToDoProvider({ children }) {
 
   function atualizaDescricao(id, descricao) {
     setLists((prev) =>
-      prev.map((lista) => 
-        lista.id === id ? {...lista, descricao: descricao} : lista
+      prev.map((lista) =>
+        lista.id === id ? { ...lista, descricao: descricao } : lista
       )
-  )
+    );
   }
 
   function addList(formData) {
@@ -82,6 +82,47 @@ export function ToDoProvider({ children }) {
       )
     );
     closeForm();
+  }
+
+  function openEditMenu(id) {
+    setMenuTodoAberto((prev) => (prev === id ? null : id));
+  }
+
+  function editTodo(formData) {
+    const nomeTodo = formData.get("nomeTodo");
+    const prioridade = formData.get("prioridade");
+    const idTodo = formData.get("idTodo");
+
+    setLists((prev) =>
+      prev.map((lista) =>
+        lista.id === selectedList
+          ? {
+              ...lista,
+              todos: lista.todos.map((todo) =>
+                todo.idTodo === idTodo
+                  ? { ...todo, nomeTodo, prioridade }
+                  : todo
+              ),
+            }
+          : lista
+      )
+    );
+
+    closeForm();
+    openEditMenu(null);
+  }
+
+  function handleClickDeleteTodo(idTodo) {
+    setLists((prev) =>
+      prev.map((lista) =>
+        lista.id === selectedList
+          ? {
+              ...lista,
+              todos: lista.todos.filter((todo) => todo.idTodo !== idTodo),
+            }
+          : lista
+      )
+    );
   }
 
   const prioridadesTodo = {
@@ -135,33 +176,33 @@ export function ToDoProvider({ children }) {
     if (selectedFilter === "todas") return true;
     if (selectedFilter === "pendentes") return !todo.concluido;
     if (selectedFilter === "concluidas") return todo.concluido;
-  })
+  });
 
-function getMensagemFiltro(filterParam, lista) {
-  if (!lista) return "";
+  function getMensagemFiltro(filterParam, lista) {
+    if (!lista) return "";
 
-  if (filterParam === "concluidas") {
-    const count = lista.todos.filter((t) => t.concluido).length;
-    return count === 0 ? "Nenhuma tarefa concluída" : "";
+    if (filterParam === "concluidas") {
+      const count = lista.todos.filter((t) => t.concluido).length;
+      return count === 0 ? "Nenhuma tarefa concluída" : "";
+    }
+
+    if (filterParam === "pendentes") {
+      const count = lista.todos.filter((t) => !t.concluido).length;
+      return count === 0 ? "Nenhuma tarefa pendente" : "";
+    }
+
+    if (filterParam === "todas") {
+      return lista.todos.length === 0 ? "Crie uma tarefa para começar!" : "";
+    }
+
+    return "";
   }
 
-  if (filterParam === "pendentes") {
-    const count = lista.todos.filter((t) => !t.concluido).length;
-    return count === 0 ? "Nenhuma tarefa pendente" : "";
+  const mensagemFiltro = getMensagemFiltro(selectedFilter, listaAtual);
+
+  function atualizaFiltro(filterParam) {
+    setSelectedFilter(filterParam);
   }
-
-  if (filterParam === "todas") {
-    return lista.todos.length === 0 ? "Crie uma tarefa para começar!" : "";
-  }
-
-  return "";
-}
-
-const mensagemFiltro = getMensagemFiltro(selectedFilter, listaAtual);
-
-function atualizaFiltro(filterParam) {
-  setSelectedFilter(filterParam);
-}
 
   return (
     <ToDoContext
@@ -189,10 +230,14 @@ function atualizaFiltro(filterParam) {
         abreDescricao,
         isRotated,
         descriptionChange,
+        openEditMenu,
+        menuTodoAberto,
+        editTodo,
+        handleClickDeleteTodo,
         handleClickDelete,
         atualizaFiltro,
         mensagemFiltro,
-        handleClickLists
+        handleClickLists,
       }}
     >
       {children}

@@ -8,7 +8,7 @@ import { Input } from "../Input";
 import { FormHeader } from "../FormHeader";
 import { CardTitle } from "../CardTitle";
 
-import { ArrowUpIcon, ScrollText, Trash2Icon } from "lucide-react";
+import { ArrowUpIcon, ScrollText, SquarePen, Trash2Icon } from "lucide-react";
 
 export function Tasks() {
   const {
@@ -32,10 +32,14 @@ export function Tasks() {
     abreDescricao,
     isRotated,
     descriptionChange,
+    openEditMenu,
+    menuTodoAberto,
+    editTodo,
+    handleClickDeleteTodo,
     handleClickDelete,
     atualizaFiltro,
     mensagemFiltro,
-    handleClickLists
+    handleClickLists,
   } = use(ToDoContext);
 
   function hexParaRgba(hex, opacidade) {
@@ -251,15 +255,66 @@ export function Tasks() {
                           >
                             {nomeTodo}
                           </p>
-                          <p
-                            className={styles.prioridadeTodo}
+
+                          <div
                             style={{
-                              "--color-priority":
-                                prioridadesCoresTodo[prioridade],
+                              display: "flex",
+                              gap: "0.6rem",
+                              alignItems: "center",
+                              marginLeft: "auto",
                             }}
                           >
-                            {prioridade}
-                          </p>
+                            <SquarePen
+                              size={"1rem"}
+                              color={listaAtual.cor}
+                              style={{ cursor: "pointer" }}
+                              onClick={() => openEditMenu(idTodo)}
+                            />
+
+                            {menuTodoAberto  === idTodo && (
+                              <div className={styles.todoMenu}  style={{ "--color-primary": listaAtual.cor }}>
+                                <button onClick={() => openForm(idTodo, nomeTodo, prioridade)}>
+                                  Editar
+                                </button>
+                                <button onClick={() => handleClickDeleteTodo(idTodo)}>Excluir</button>
+                              </div>
+                            )}
+
+                            <Form name={idTodo} addFunction={editTodo}>
+                              <FormHeader>Editar To-Do</FormHeader>
+                              <input
+                                type="hidden"
+                                name="idTodo"
+                                value={idTodo}
+                              />
+                              <Input
+                                name="nomeTodo"
+                                placeholder="Digite o novo nome do seu to-do..."
+                                defaultValue={nomeTodo}
+                                required
+                              />
+                              <select
+                                name="prioridade"
+                                defaultValue={prioridade}
+                                className={styles.selectPrioridade}
+                              >
+                                <option value="Alta">Alta</option>
+                                <option value="Média">Média</option>
+                                <option value="Baixa">Baixa</option>
+                              </select>
+                              <Button type="submit">Enviar</Button>
+                            </Form>
+
+                            <p
+                              className={styles.prioridadeTodo}
+                              style={{
+                                "--color-priority":
+                                  prioridadesCoresTodo[prioridade],
+                              }}
+                            >
+                              {prioridade}
+                            </p>
+                          </div>
                         </li>
                       </div>
                     );
