@@ -1,6 +1,6 @@
 import styles from "./form.module.css";
 import { use } from "react";
-import ToDoContext from "../ToDoProvider/ToDoContext";
+import ToDoContext from "../../../context/ToDoProvider/ToDoContext";
 
 export function Form({ children, name, addFunction, ...rest}) {
   const { activeForm } = use(ToDoContext);

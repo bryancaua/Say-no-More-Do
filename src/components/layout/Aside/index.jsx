@@ -1,5 +1,5 @@
 import styles from "./aside.module.css";
-import logo from "../../assets/say no more-do logo ofci.png";
+import logo from "../../../assets/say no more-do logo ofci.png";
 
 import {
   LayoutDashboardIcon,
@@ -9,7 +9,7 @@ import {
   ChartNoAxesColumn,
 } from "lucide-react";
 import { useState } from "react";
-import { IconButton } from "../IconButton";
+import { IconButton } from "../../ui/IconButton/index";
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboardIcon },

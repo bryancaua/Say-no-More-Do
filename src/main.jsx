@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { ToDoProvider } from "./components/ToDoProvider/index.jsx";
-import { Aside } from "./components/Aside/index.jsx";
-import { Tasks } from "./components/Tasks/index.jsx";
+import { ToDoProvider } from "./context/ToDoProvider/index.jsx";
+import { Aside } from "./components/layout/Aside/index.jsx";
+import { Tasks } from "./pages/Tasks/index.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 createRoot(document.getElementById("root")).render(

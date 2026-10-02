@@ -1,12 +1,12 @@
 import { use } from "react";
-import { Card } from "../Card";
+import { Card } from "../../components/ui/Card";
 import styles from "./tasks.module.css";
-import { Button } from "../Button";
-import ToDoContext from "../ToDoProvider/ToDoContext";
-import { Form } from "../Form";
-import { Input } from "../Input";
-import { FormHeader } from "../FormHeader";
-import { CardTitle } from "../CardTitle";
+import { Button } from "../../components/ui/Button";
+import ToDoContext from "../../context/ToDoProvider/ToDoContext";
+import { Form } from "../../components/ui/Form";
+import { Input } from "../../components/ui/Input";
+import { FormHeader } from "../../components/ui/FormHeader";
+import { CardTitle } from "../../components/ui/CardTitle";
 
 import { ArrowUpIcon, ScrollText, SquarePen, Trash2Icon } from "lucide-react";
 

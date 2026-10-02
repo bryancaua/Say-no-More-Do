@@ -1,5 +1,5 @@
 import {NavLink } from "react-router";
-import styles from "../Aside/aside.module.css";
+import styles from "../../layout/Aside/aside.module.css";
 
 export function IconButton({ collapsed, id, label, Icon }) {
 
