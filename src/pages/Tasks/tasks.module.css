@@ -7,7 +7,7 @@
 }
 
 .p {
-  font-size: 14px;
+    font-size: 14px;
   font-family: "Inter", sans-serif;
   font-weight: 400;
   color: #1c1b2e;
@@ -20,15 +20,6 @@
   align-items: center;
   width: 100%;
   padding: 1rem;
-}
-
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: 1200px;
-  margin-bottom: 3rem;
 }
 
 .content {

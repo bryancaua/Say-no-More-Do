@@ -7,8 +7,8 @@ import { Form } from "../../components/ui/Form";
 import { Input } from "../../components/ui/Input";
 import { FormHeader } from "../../components/ui/FormHeader";
 import { CardTitle } from "../../components/ui/CardTitle";
-
 import { ArrowUpIcon, ScrollText, SquarePen, Trash2Icon } from "lucide-react";
+import { HeaderTitle } from "../../components/ui/HeaderTitle";
 
 export function Tasks() {
   const {
@@ -53,14 +53,14 @@ export function Tasks() {
   return (
     <>
       <section className={styles.section}>
-        <header className={styles.header}>
-          <h1 className={styles.h1}>
-            {hasLists
+        <HeaderTitle
+          title={
+            hasLists
               ? "Selecione uma lista, vamos concluir tudo!"
-              : "Não há listas criadas ainda, crie uma para começar"}
-          </h1>
-          <p className={styles.p}>Organize e conclua o que importa.</p>
-        </header>
+              : "Não há listas criadas ainda, crie uma para começar"
+          }
+          description="Organize e conclua o que importa."
+        />
 
         <div className={styles.content}>
           <div className={styles.divList}>

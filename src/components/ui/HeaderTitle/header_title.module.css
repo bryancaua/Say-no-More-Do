@@ -1,0 +1,16 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 3rem;
+}
+
+.p {
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  color: #1c1b2e;
+  white-space: nowrap;
+}
