@@ -9,8 +9,6 @@ export function nomeDoMes(mes) {
     return NOMES_MESES[Number(numero)  -1];
 }
 
-
-
 export function anoDoMes(mes) {
     return mes.split("-")[0];
 }

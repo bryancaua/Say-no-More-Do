@@ -7,6 +7,12 @@
   --color-card-bg: #ffffff;
   --color-selected: #A78BFA;
   --color-grey: #F5F4F7;
+
+  --color-estudos: #4f7fe0;
+  --color-saude: #3fa66b;
+  --color-carreira: #e08a3c;
+  --color-financas: #d9a23a;
+  --color-pessoal: #9b5de5;
 }
 
 * {

@@ -1,0 +1,10 @@
+.goalsCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  min-height: 150px;
+  background-color: var(--color-card-bg);
+  border-radius: 16px;
+  padding: 24px;
+}
