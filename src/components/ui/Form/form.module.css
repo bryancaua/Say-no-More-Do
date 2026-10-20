@@ -29,4 +29,6 @@
 .form--especial {
   align-items: normal;
   min-width: 820px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
 }

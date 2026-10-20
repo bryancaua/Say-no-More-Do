@@ -5,18 +5,24 @@ import { nomeDoMes, anoDoMes, mesesDisponiveis } from "../../utils/data.js";
 import styles from "./goals.module.css";
 import { GoalsCard } from "../../components/ui/GoalsCard/index.jsx";
 import { CATEGORIAS } from "../../utils/categorias.js";
-import { ArrowLeft, ArrowRight, Star, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Star,
+  X,
+} from "lucide-react";
 import { Form } from "../../components/ui/Form/index.jsx";
 import ToDoContext from "../../context/ToDoProvider/ToDoContext.js";
 import { Input } from "../../components/ui/Input/index.jsx";
 import Switch from "../../components/ui/Switch/index.jsx";
 import { Button } from "../../components/ui/Button/index.jsx";
+import { SubmetasEtapa } from "../../components/ui/SubmetasEtapa/index.jsx";
 
 export function Goals() {
   const {
     selecionarCategoria,
     categoriaSelecionada,
-    addMeta,
     filtroCategorias,
     setFiltroCategorias,
     metaCardsPrincipais,
@@ -25,8 +31,17 @@ export function Goals() {
     avançaMes,
     indiceMes,
     regrideMes,
+
+    etapaMeta,
+    irParaSubmetas,
+    voltarParaDadosBasicos,
+    adicionarSubmeta,
+    removerSubmeta,
+    submetasRascunho,
+    finalizarMeta,
+    cancelarCriacaoMeta,
   } = use(GoalsContext);
-  const { openForm, closeForm } = use(ToDoContext);
+  const { openForm } = use(ToDoContext);
 
   return (
     <section className={styles.section}>
@@ -40,122 +55,151 @@ export function Goals() {
         </button>
       </header>
 
-      <Form name="metas" variant={"especial"} addFunction={addMeta}>
+      <Form
+        name="metas"
+        variant={"especial"}
+        addFunction={etapaMeta === 1 ? irParaSubmetas : finalizarMeta}
+      >
         <header className={styles.headerForm}>
           <div className={styles.formDiv}>
             <p className={styles.pFormMetas}>NOVA META</p>
-            <h2 className={styles.h2FormMetas}>O essencial</h2>
+
+            <h2 className={styles.h2FormMetas}>
+              {etapaMeta === 1 ? "O essencial" : "Como medir o avanço"}
+            </h2>
           </div>
 
           <X
             style={{ cursor: "pointer", color: "var(--color-primary)" }}
             size={20}
-            onClick={() => closeForm()}
+            onClick={cancelarCriacaoMeta}
           />
         </header>
 
         <div className={styles.div} aria-label="Etapas">
           <div className={`${styles.step} ${styles.stepActive}`}>
-            <span className={styles.stepNumber}>1</span>
+            <span className={styles.stepNumber}>
+              {etapaMeta === 1 ? "1" : <Check size={18} />}
+            </span>
+
             <span className={styles.p}>Básico</span>
           </div>
 
           <div className={styles.stepsLine} aria-hidden="true" />
 
-          <div className={`${styles.step} ${styles.stepInactive}`}>
+          <div
+            className={`${styles.step} ${
+              etapaMeta === 2 ? styles.stepActive : styles.stepInactive
+            }`}
+          >
             <span className={styles.stepNumber}>2</span>
             <span className={styles.p}>Submetas</span>
           </div>
         </div>
 
-        <div className={styles.divMetas}>
-          <div className={styles.divMetaTitulo}>
-            <p className={styles.pFormMetas}>TÍTULO</p>
-            <Input
-              placeholder="Dê um nome a sua meta"
-              name="tituloMeta"
-              required
-            />
-          </div>
+        {etapaMeta === 1 ? (
+          <div className={styles.divMetas}>
+            {/* aqui permanece todo o seu formulário atual:
+        título, descrição, importância, categoria e mês */}
 
-          <div className={styles.divMetaTitulo}>
-            <p className={styles.pFormMetas}>DESCRIÇÃO</p>
-            <Input
-              placeholder="Descreva o resultado que deseja alcançar!"
-              name="descricaoMeta"
-              required
-            />
-          </div>
+            <div className={styles.divMetaTitulo}>
+              <p className={styles.pFormMetas}>TÍTULO</p>
 
-          <div className={styles.divMetaTitulo}>
-            <p className={styles.pFormMetas}>POR QUE ISSO IMPORTA?</p>
-            <Input
-              placeholder="Mentalize sua meta.."
-              name="importancia"
-              required
-            />
-          </div>
-
-          <div className={styles.divMetaTitulo}>
-            <p className={styles.pFormMetas}>CATEGORIAS</p>
-            <div className={styles.categorias}>
-              {CATEGORIAS.map((categoria) => (
-                <button
-                  type="button"
-                  className={styles.buttonCategoria}
-                  key={categoria.id}
-                  onClick={() => selecionarCategoria(categoria.id)}
-                  style={
-                    categoriaSelecionada == categoria.id
-                      ? {
-                          border: `2px solid ${categoria.cor}`,
-                          color: `${categoria.cor}`,
-                          transition: "ease 0.2s",
-                        }
-                      : null
-                  }
-                >
-                  <span
-                    className={styles.bolinha}
-                    style={{
-                      "--cor-categoria": categoria.cor,
-                      width: "10px",
-                      height: "10px",
-                    }}
-                  />
-                  {categoria.label}
-                </button>
-              ))}
+              <Input
+                placeholder="Dê um nome a sua meta"
+                name="tituloMeta"
+                required
+              />
             </div>
-          </div>
 
-          <p className={styles.pFormMetas}>MÊS DE REFERÊNCIA</p>
-          <div className={styles.divMetaFooter}>
-            <select
-              name="mes"
-              id=""
-              className={styles.selectMes}
-              style={{ width: "40%" }}
-              defaultValue={mesesDisponiveis()[0]}
-            >
-              {mesesDisponiveis().map((mes) => (
-                <option key={mes} value={mes}>
-                  {nomeDoMes(mes)} {anoDoMes(mes)}
-                </option>
-              ))}
-            </select>
-            <label className={styles.card}>
-              <div className={styles.info}>
-                <Star size={20} color="#c9a227" />
-                <span className={styles.spanMetaToggle}>Meta principal</span>
+            <div className={styles.divMetaTitulo}>
+              <p className={styles.pFormMetas}>DESCRIÇÃO</p>
+
+              <Input
+                placeholder="Descreva o resultado que deseja alcançar!"
+                name="descricaoMeta"
+                required
+              />
+            </div>
+
+            <div className={styles.divMetaTitulo}>
+              <p className={styles.pFormMetas}>POR QUE ISSO IMPORTA?</p>
+
+              <Input
+                placeholder="Mentalize sua meta.."
+                name="importancia"
+                required
+              />
+            </div>
+
+            <div className={styles.divMetaTitulo}>
+              <p className={styles.pFormMetas}>CATEGORIAS</p>
+              <div className={styles.categorias}>
+                {CATEGORIAS.map((categoria) => (
+                  <button
+                    type="button"
+                    className={styles.buttonCategoria}
+                    key={categoria.id}
+                    onClick={() => selecionarCategoria(categoria.id)}
+                    style={
+                      categoriaSelecionada == categoria.id
+                        ? {
+                            border: `2px solid ${categoria.cor}`,
+                            color: `${categoria.cor}`,
+                            transition: "ease 0.2s",
+                          }
+                        : null
+                    }
+                  >
+                    <span
+                      className={styles.bolinha}
+                      style={{
+                        "--cor-categoria": categoria.cor,
+                        width: "10px",
+                        height: "10px",
+                      }}
+                    />
+                    {categoria.label}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              <Switch name="principal" />
-            </label>
+            <p className={styles.pFormMetas}>MÊS DE REFERÊNCIA</p>
+
+            <div className={styles.divMetaFooter}>
+              <select
+                name="mes"
+                className={styles.selectMes}
+                defaultValue={mesesDisponiveis()[0]}
+              >
+                {mesesDisponiveis().map((mes) => (
+                  <option key={mes} value={mes}>
+                    {nomeDoMes(mes)} {anoDoMes(mes)}
+                  </option>
+                ))}
+              </select>
+
+              <label className={styles.card}>
+                <div className={styles.info}>
+                  <Star size={20} color="#c9a227" />
+                  <span className={styles.spanMetaToggle}>Meta principal</span>
+                </div>
+
+                <Switch name="principal" />
+              </label>
+            </div>
+
+            <Button type="submit">Próximo</Button>
           </div>
-
-          <Button type="submit">salvar</Button>
-        </div>
+        ) : (
+          <SubmetasEtapa
+            submetas={submetasRascunho}
+            adicionarSubmeta={adicionarSubmeta}
+            removerSubmeta={removerSubmeta}
+            voltarParaDadosBasicos={voltarParaDadosBasicos}
+          />
+        )}
       </Form>
 
       <div className={styles.div}>
@@ -186,7 +230,7 @@ export function Goals() {
           {metaCardsPrincipais.map((meta) => {
             return (
               <div className={styles.div} key={meta.idMeta}>
-                <GoalsCard key={meta.id} meta={meta} />
+                <GoalsCard key={meta.metaId} meta={meta} />
               </div>
             );
           })}
@@ -240,7 +284,7 @@ export function Goals() {
 
         <div className={styles.cardsGrid}>
           {metaCardsPadrao.map((meta) => (
-            <GoalsCard key={meta.id} meta={meta} />
+            <GoalsCard key={meta.idMeta} meta={meta} />
           ))}
         </div>
       </section>
