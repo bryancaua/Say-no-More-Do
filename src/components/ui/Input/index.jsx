@@ -1,7 +1,12 @@
-import styles from "./input.module.css"
+import styles from "./input.module.css";
 
-export function Input ({...rest}) {
-    return (
-        <input {...rest} className={styles.input} />
-    )
+export function Input({ className, variant, ...rest }) {
+    
+  const inputClasses = [
+    styles.input,
+    variant && styles[`input--${variant}`],
+    className,
+  ].filter(Boolean).join(" ");
+
+  return <input {...rest} className={inputClasses} />
 }

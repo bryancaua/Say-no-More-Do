@@ -5,6 +5,59 @@
   width: 100%;
   min-height: 150px;
   background-color: var(--color-card-bg);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   border-radius: 16px;
   padding: 24px;
 }
+
+.GoalsInfoDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metaCardDestaque {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+  background-color: #3E2A8E;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 16px;
+  max-width: 100px;
+}
+
+.pCategoria {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--cor-categoria);
+}
+
+.pTituloMetas {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.22px;
+  line-height: 27.5px;
+  font-family: "Fraunces", serif;
+}
+
+.categoria {
+  display: inline-flex;
+  gap: 0.4rem;
+  background: color-mix(in srgb, var(--cor-categoria) 15%, white);
+  align-items: center;
+  border-radius: 16px;
+  padding: 4px 8px;
+  width: max-content;
+}
+
+.bolinha {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  background-color: var(--cor-categoria);
+  flex-shrink: 0;
+}
+

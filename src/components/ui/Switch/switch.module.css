@@ -1,0 +1,73 @@
+.switch {
+  --switch-off: #d4d0e6;
+  --switch-on: #6c5ce7;
+
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 3.5em;
+  height: 2em;
+  flex-shrink: 0;
+}
+
+.input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--switch-off);
+  border: 1px solid var(--switch-off);
+  border-radius: 32px;
+  outline: none;
+  transition: 0.4s;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  outline: 2px solid var(--switch-off);
+  left: -1px;
+  bottom: -1px;
+  background-color: #fff;
+  transition: transform 0.25s ease-in-out 0s;
+}
+
+.icon {
+  opacity: 0;
+  height: 12px;
+  width: 12px;
+  stroke-width: 8;
+  stroke: var(--switch-on);
+  position: absolute;
+  z-index: 1;
+  right: 60%;
+  top: 30%;
+  transition: right ease-in-out 0.3s, opacity ease-in-out 0.15s;
+}
+
+.input:checked + .slider {
+  background-color: var(--switch-on);
+  border-color: var(--switch-on);
+}
+
+.input:checked + .slider::before {
+  transform: translateX(1.5em);
+  outline-color: var(--switch-on);
+}
+
+.input:checked + .slider .icon {
+  opacity: 1;
+  right: 20%;
+}
+
+.input:focus-visible + .slider {
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.35);
+}
