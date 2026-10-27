@@ -1,15 +1,8 @@
-import { useState } from "react";
-import {
-  ArrowLeft,
-  Check,
-  Flame,
-  Hand,
-  List,
-  Plus,
-  X,
-} from "lucide-react";
+import { use, useState } from "react";
+import { ArrowLeft, Check, Flame, Hand, List, Plus, X } from "lucide-react";
 import styles from "../../../pages/Goals/goals.module.css";
 import { Input } from "../Input/index.jsx";
+import ToDoContext from "../../../context/ToDoProvider/ToDoContext.js";
 
 export function SubmetasEtapa({
   submetas,
@@ -17,6 +10,7 @@ export function SubmetasEtapa({
   removerSubmeta,
   voltarParaDadosBasicos,
 }) {
+  const { lists } = use(ToDoContext);
   const [tipoSelecionado, setTipoSelecionado] = useState("manual");
 
   const [dadosSubmeta, setDadosSubmeta] = useState({
@@ -24,7 +18,7 @@ export function SubmetasEtapa({
     data: "",
     habito: "",
     alvoDias: "",
-    lista: "",
+    listaId: "",
     alvoTodos: "",
   });
 
@@ -43,7 +37,7 @@ export function SubmetasEtapa({
       data: "",
       habito: "",
       alvoDias: "",
-      lista: "",
+      listaId: "",
       alvoTodos: "",
     });
   }
@@ -60,6 +54,7 @@ export function SubmetasEtapa({
         tipo: "manual",
         titulo: dadosSubmeta.titulo,
         data: dadosSubmeta.data,
+        concluida: false
       };
     }
 
@@ -75,7 +70,7 @@ export function SubmetasEtapa({
     if (tipoSelecionado === "lista") {
       novaSubmeta = {
         tipo: "lista",
-        lista: dadosSubmeta.lista,
+        listaId: dadosSubmeta.listaId,
         alvoTodos: dadosSubmeta.alvoTodos,
         data: dadosSubmeta.data,
       };
@@ -83,6 +78,17 @@ export function SubmetasEtapa({
 
     adicionarSubmeta(novaSubmeta);
     limparFormularioSubmeta();
+  }
+
+  function textoSubmeta(submeta) {
+    if (submeta.tipo === "manual") return submeta.titulo;
+
+    if (submeta.tipo === "habito") {
+      return `Meta de hábito: ${submeta.alvoDias} dias`;
+    }
+
+    const lista = lists.find((l) => l.id === submeta.listaId);
+    return `${submeta.alvoTodos} to-dos em ${lista?.nome ?? "lista removida"}`;
   }
 
   return (
@@ -93,19 +99,8 @@ export function SubmetasEtapa({
         </p>
 
         {submetas.map((submeta) => (
-          <div
-            className={styles.submetaAdicionada}
-            key={submeta.idSubmeta}
-          >
-            <span>
-              {submeta.tipo === "manual" && submeta.titulo}
-
-              {submeta.tipo === "habito" &&
-                `Meta de hábito: ${submeta.alvoDias} dias`}
-
-              {submeta.tipo === "lista" &&
-                `Meta de lista: ${submeta.alvoTodos} tarefas`}
-            </span>
+          <div className={styles.submetaAdicionada} key={submeta.idSubmeta}>
+            <span>{textoSubmeta(submeta)}</span>
 
             <div className={styles.submetaAcoes}>
               <span className={styles.tagSubmeta}>
@@ -185,8 +180,6 @@ export function SubmetasEtapa({
             <List size={18} />
             Lista
           </button>
-
-          {/* Pomodoro/Foco foi ignorado conforme você pediu */}
         </div>
 
         {tipoSelecionado === "manual" && (
@@ -200,9 +193,7 @@ export function SubmetasEtapa({
               placeholder="Ex.: Terminar o curso"
             />
 
-            <label className={styles.labelSubmeta}>
-              DATA (OPCIONAL)
-            </label>
+            <label className={styles.labelSubmeta}>DATA (OPCIONAL)</label>
 
             <Input
               name="data"
@@ -215,9 +206,7 @@ export function SubmetasEtapa({
 
         {tipoSelecionado === "habito" && (
           <div className={styles.camposSubmeta}>
-            <label className={styles.labelSubmeta}>
-              HÁBITO EXISTENTE
-            </label>
+            <label className={styles.labelSubmeta}>HÁBITO EXISTENTE</label>
 
             <Input
               name="habito"
@@ -229,9 +218,7 @@ export function SubmetasEtapa({
 
             <div className={styles.linhaCampos}>
               <div>
-                <label className={styles.labelSubmeta}>
-                  ALVO (DIAS)
-                </label>
+                <label className={styles.labelSubmeta}>ALVO (DIAS)</label>
 
                 <Input
                   name="alvoDias"
@@ -244,9 +231,7 @@ export function SubmetasEtapa({
               </div>
 
               <div>
-                <label className={styles.labelSubmeta}>
-                  DATA (OPCIONAL)
-                </label>
+                <label className={styles.labelSubmeta}>DATA (OPCIONAL)</label>
 
                 <Input
                   name="data"
@@ -262,22 +247,24 @@ export function SubmetasEtapa({
 
         {tipoSelecionado === "lista" && (
           <div className={styles.camposSubmeta}>
-            <label className={styles.labelSubmeta}>
-              LISTA DE TAREFAS
-            </label>
+            <label className={styles.labelSubmeta}>LISTA DE TAREFAS</label>
 
-            <Input
-              name="lista"
-              value={dadosSubmeta.lista}
+            <select
+              name="listaId"
+              value={dadosSubmeta.listaId}
               onChange={atualizarCampo}
-              placeholder="Selecione uma lista"
-            />
+            >
+              <option value="">Selecione uma lista</option>
+              {lists.map((list) => (
+                <option key={list.id} value={list.id}>
+                  {list.nome}
+                </option>
+              ))}
+            </select>
 
             <div className={styles.linhaCampos}>
               <div>
-                <label className={styles.labelSubmeta}>
-                  ALVO (TO-DOS)
-                </label>
+                <label className={styles.labelSubmeta}>ALVO (TO-DOS)</label>
 
                 <Input
                   name="alvoTodos"
@@ -289,9 +276,7 @@ export function SubmetasEtapa({
               </div>
 
               <div>
-                <label className={styles.labelSubmeta}>
-                  DATA (OPCIONAL)
-                </label>
+                <label className={styles.labelSubmeta}>DATA (OPCIONAL)</label>
 
                 <Input
                   name="data"
@@ -316,9 +301,7 @@ export function SubmetasEtapa({
 
       <div className={styles.avisoSubmetas}>
         <span>◎</span>
-        <p>
-          Sem submetas, você controla o progresso por um slider.
-        </p>
+        <p>Sem submetas, você controla o progresso por um slider.</p>
       </div>
 
       <div className={styles.footerForm}>

@@ -428,7 +428,7 @@
   box-shadow: 0 1px 4px rgba(63, 45, 143, 0.15);
 }
 
-/* campos dinâmicos */
+/* campos dinâmicos das submetas */
 .camposSubmeta {
   display: flex;
   flex-direction: column;

@@ -4,7 +4,7 @@ import { mesesDisponiveis } from "../../utils/data";
 import ToDoContext from "../ToDoProvider/ToDoContext";
 
 export function GoalsProvider({ children }) {
-  const { closeForm } = use(ToDoContext);
+  const { closeForm, lists } = use(ToDoContext);
 
   const [categoriaSelecionada, setCategoriaSelecionada] = useState();
   const [filtroCategorias, setFiltroCategorias] = useState("todas");
@@ -31,8 +31,7 @@ export function GoalsProvider({ children }) {
 
   const metaCardsFiltrados = metaCards.filter(
     (meta) =>
-      (filtroCategorias === "todas" ||
-        meta.categoria === filtroCategorias) &&
+      (filtroCategorias === "todas" || meta.categoria === filtroCategorias) &&
       meta.mes === mesSelecionado
   );
 
@@ -40,9 +39,7 @@ export function GoalsProvider({ children }) {
     (meta) => meta.principal
   );
 
-  const metaCardsPadrao = metaCardsFiltrados.filter(
-    (meta) => !meta.principal
-  );
+  const metaCardsPadrao = metaCardsFiltrados.filter((meta) => !meta.principal);
 
   function irParaSubmetas(formData) {
     const tituloMeta = formData.get("tituloMeta");
@@ -116,6 +113,77 @@ export function GoalsProvider({ children }) {
     closeForm();
   }
 
+  const submetaConcluida = (submeta) => {
+    if (submeta.tipo === "lista") {
+      const listaRelacionada = lists.find(
+        (lista) => lista.id === submeta.listaId
+      );
+
+      if (!listaRelacionada) {
+        return false;
+      }
+
+      if (listaRelacionada.todos.length === 0) {
+        return false;
+      }
+
+      const toDosConcluidos = listaRelacionada.todos.filter(
+        (t) => t.concluido
+      ).length;
+
+      const listaFinalizada = toDosConcluidos === listaRelacionada.todos.length;
+
+      return listaFinalizada;
+    }
+
+    return submeta.concluida ?? false;
+  };
+
+  function alternarSubmetaManual(idMeta, idSubmeta) {
+    setMetaCards((prev) =>
+      prev.map((meta) => {
+        if (meta.idMeta !== idMeta) {
+          return meta;
+        }
+
+        return {
+          ...meta,
+          submetas: meta.submetas.map((submeta) => {
+            if (submeta.idSubmeta === idSubmeta) {
+              return {
+                ...submeta,
+                concluida: !submeta.concluida
+              };
+            }
+
+            return submeta;
+          }),
+        };
+      })
+    );
+  }
+
+  const contagemSubmetas = (meta) => {
+  const submetas = meta.submetas || []
+
+  const total = submetas.length;
+  const concluidas = submetas.filter((submeta) => submetaConcluida(submeta)).length;
+
+  return { total, concluidas };
+};
+
+  const progressoMeta = (meta) => {
+    const { total, concluidas } = contagemSubmetas(meta);
+
+    if (total > 0) {
+      const metasConcluidasPercent = (concluidas / total)*100;
+
+      return Math.round(metasConcluidasPercent);
+    }
+
+    return meta.progressoManual?? 0;
+  }
+
   return (
     <GoalsContext
       value={{
@@ -139,6 +207,9 @@ export function GoalsProvider({ children }) {
         submetasRascunho,
         finalizarMeta,
         cancelarCriacaoMeta,
+        submetaConcluida,
+        progressoMeta,
+        contagemSubmetas
       }}
     >
       {children}

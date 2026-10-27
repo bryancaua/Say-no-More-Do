@@ -40,8 +40,15 @@ export function Goals() {
     submetasRascunho,
     finalizarMeta,
     cancelarCriacaoMeta,
+    submetaConcluida
   } = use(GoalsContext);
   const { openForm } = use(ToDoContext);
+
+  metaCardsPadrao.forEach((meta) => {
+  meta.submetas.forEach((submeta) => {
+    console.log(meta.tituloMeta, submeta.tipo, submetaConcluida(submeta));
+  });
+  });
 
   return (
     <section className={styles.section}>
@@ -99,9 +106,6 @@ export function Goals() {
 
         {etapaMeta === 1 ? (
           <div className={styles.divMetas}>
-            {/* aqui permanece todo o seu formulário atual:
-        título, descrição, importância, categoria e mês */}
-
             <div className={styles.divMetaTitulo}>
               <p className={styles.pFormMetas}>TÍTULO</p>
 
@@ -182,7 +186,7 @@ export function Goals() {
 
               <label className={styles.card}>
                 <div className={styles.info}>
-                  <Star size={20} color="#c9a227" />
+                  <Star size={20} fill="#c9a227" color="#c9a227" />
                   <span className={styles.spanMetaToggle}>Meta principal</span>
                 </div>
 
