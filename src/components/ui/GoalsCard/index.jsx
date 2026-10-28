@@ -7,11 +7,15 @@ import { use } from "react";
 
 export function GoalsCard({ meta }) {
   const categoria = getCategoria(meta.categoria);
-  const { progressoMeta, contagemSubmetas } = use(GoalsContext);
+  const { progressoMeta, contagemSubmetas, abrirMeta } = use(GoalsContext);
   const { total, concluidas } = contagemSubmetas(meta);
 
   return (
-    <div className={styles.goalsCard}>
+    <div
+      className={styles.goalsCard}
+      onClick={() => abrirMeta(meta.idMeta)}
+      style={{ cursor: "pointer" }}
+    >
       <ProgressRing
         value={progressoMeta(meta)}
         size={100}

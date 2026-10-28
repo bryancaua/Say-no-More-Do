@@ -4,6 +4,14 @@ import styles from "../../../pages/Goals/goals.module.css";
 import { Input } from "../Input/index.jsx";
 import ToDoContext from "../../../context/ToDoProvider/ToDoContext.js";
 
+const ESTADO_INICIAL = {
+  titulo: "",
+  data: "",
+  habito: "",
+  alvoDias: "",
+  listaId: "",
+};
+
 export function SubmetasEtapa({
   submetas,
   adicionarSubmeta,
@@ -12,68 +20,57 @@ export function SubmetasEtapa({
 }) {
   const { lists } = use(ToDoContext);
   const [tipoSelecionado, setTipoSelecionado] = useState("manual");
-
-  const [dadosSubmeta, setDadosSubmeta] = useState({
-    titulo: "",
-    data: "",
-    habito: "",
-    alvoDias: "",
-    listaId: "",
-    alvoTodos: "",
-  });
+  const [dadosSubmeta, setDadosSubmeta] = useState(ESTADO_INICIAL);
 
   function atualizarCampo(event) {
     const { name, value } = event.target;
+    setDadosSubmeta((prev) => ({ ...prev, [name]: value }));
+  }
 
+  function selecionarLista(event) {
+    const listaId = event.target.value;
+    const lista = lists.find((l) => l.id === listaId);
+
+    // sugere o nome da lista como título, mas só se o usuário ainda não digitou nada
     setDadosSubmeta((prev) => ({
       ...prev,
-      [name]: value,
+      listaId,
+      titulo: prev.titulo.trim() ? prev.titulo : (lista?.nome ?? ""),
     }));
   }
 
   function limparFormularioSubmeta() {
-    setDadosSubmeta({
-      titulo: "",
-      data: "",
-      habito: "",
-      alvoDias: "",
-      listaId: "",
-      alvoTodos: "",
-    });
+    setDadosSubmeta(ESTADO_INICIAL);
   }
 
   function adicionar() {
+    const titulo = dadosSubmeta.titulo.trim();
+
+    if (!titulo) return;
+    if (tipoSelecionado === "lista" && !dadosSubmeta.listaId) return;
+
+    const base = {
+      tipo: tipoSelecionado,
+      titulo,
+      data: dadosSubmeta.data,
+    };
+
     let novaSubmeta;
 
     if (tipoSelecionado === "manual") {
-      if (!dadosSubmeta.titulo.trim()) {
-        return;
-      }
-
-      novaSubmeta = {
-        tipo: "manual",
-        titulo: dadosSubmeta.titulo,
-        data: dadosSubmeta.data,
-        concluida: false
-      };
+      novaSubmeta = { ...base, concluida: false };
     }
 
     if (tipoSelecionado === "habito") {
       novaSubmeta = {
-        tipo: "habito",
+        ...base,
         habito: dadosSubmeta.habito,
         alvoDias: dadosSubmeta.alvoDias,
-        data: dadosSubmeta.data,
       };
     }
 
     if (tipoSelecionado === "lista") {
-      novaSubmeta = {
-        tipo: "lista",
-        listaId: dadosSubmeta.listaId,
-        alvoTodos: dadosSubmeta.alvoTodos,
-        data: dadosSubmeta.data,
-      };
+      novaSubmeta = { ...base, listaId: dadosSubmeta.listaId };
     }
 
     adicionarSubmeta(novaSubmeta);
@@ -81,14 +78,7 @@ export function SubmetasEtapa({
   }
 
   function textoSubmeta(submeta) {
-    if (submeta.tipo === "manual") return submeta.titulo;
-
-    if (submeta.tipo === "habito") {
-      return `Meta de hábito: ${submeta.alvoDias} dias`;
-    }
-
-    const lista = lists.find((l) => l.id === submeta.listaId);
-    return `${submeta.alvoTodos} to-dos em ${lista?.nome ?? "lista removida"}`;
+    return submeta.titulo || "Submeta sem nome";
   }
 
   return (
@@ -182,27 +172,29 @@ export function SubmetasEtapa({
           </button>
         </div>
 
-        {tipoSelecionado === "manual" && (
-          <div className={styles.camposSubmeta}>
-            <label className={styles.labelSubmeta}>TÍTULO</label>
+        <div className={styles.camposSubmeta}>
+          <label className={styles.labelSubmeta}>TÍTULO</label>
 
-            <Input
-              name="titulo"
-              value={dadosSubmeta.titulo}
-              onChange={atualizarCampo}
-              placeholder="Ex.: Terminar o curso"
-            />
+          <Input
+            name="titulo"
+            value={dadosSubmeta.titulo}
+            onChange={atualizarCampo}
+            placeholder={
+              tipoSelecionado === "lista"
+                ? "Ex.: Concluir os estudos de Docker"
+                : "Ex.: Terminar o curso"
+            }
+          />
 
-            <label className={styles.labelSubmeta}>DATA (OPCIONAL)</label>
+          <label className={styles.labelSubmeta}>DATA (OPCIONAL)</label>
 
-            <Input
-              name="data"
-              value={dadosSubmeta.data}
-              onChange={atualizarCampo}
-              placeholder="Ex.: 25 out"
-            />
-          </div>
-        )}
+          <Input
+            name="data"
+            value={dadosSubmeta.data}
+            onChange={atualizarCampo}
+            placeholder="Ex.: 25 out"
+          />
+        </div>
 
         {tipoSelecionado === "habito" && (
           <div className={styles.camposSubmeta}>
@@ -216,32 +208,16 @@ export function SubmetasEtapa({
               disabled
             />
 
-            <div className={styles.linhaCampos}>
-              <div>
-                <label className={styles.labelSubmeta}>ALVO (DIAS)</label>
+            <label className={styles.labelSubmeta}>ALVO (DIAS)</label>
 
-                <Input
-                  name="alvoDias"
-                  type="number"
-                  value={dadosSubmeta.alvoDias}
-                  onChange={atualizarCampo}
-                  placeholder="Ex.: 15"
-                  disabled
-                />
-              </div>
-
-              <div>
-                <label className={styles.labelSubmeta}>DATA (OPCIONAL)</label>
-
-                <Input
-                  name="data"
-                  value={dadosSubmeta.data}
-                  onChange={atualizarCampo}
-                  placeholder="Ex.: 25 out"
-                  disabled
-                />
-              </div>
-            </div>
+            <Input
+              name="alvoDias"
+              type="number"
+              value={dadosSubmeta.alvoDias}
+              onChange={atualizarCampo}
+              placeholder="Ex.: 15"
+              disabled
+            />
           </div>
         )}
 
@@ -252,7 +228,7 @@ export function SubmetasEtapa({
             <select
               name="listaId"
               value={dadosSubmeta.listaId}
-              onChange={atualizarCampo}
+              onChange={selecionarLista}
             >
               <option value="">Selecione uma lista</option>
               {lists.map((list) => (
@@ -261,31 +237,6 @@ export function SubmetasEtapa({
                 </option>
               ))}
             </select>
-
-            <div className={styles.linhaCampos}>
-              <div>
-                <label className={styles.labelSubmeta}>ALVO (TO-DOS)</label>
-
-                <Input
-                  name="alvoTodos"
-                  type="number"
-                  value={dadosSubmeta.alvoTodos}
-                  onChange={atualizarCampo}
-                  placeholder="Ex.: 6"
-                />
-              </div>
-
-              <div>
-                <label className={styles.labelSubmeta}>DATA (OPCIONAL)</label>
-
-                <Input
-                  name="data"
-                  value={dadosSubmeta.data}
-                  onChange={atualizarCampo}
-                  placeholder="Ex.: 25 out"
-                />
-              </div>
-            </div>
           </div>
         )}
 
@@ -293,6 +244,7 @@ export function SubmetasEtapa({
           type="button"
           className={styles.buttonAdicionarSubmeta}
           onClick={adicionar}
+          disabled={!dadosSubmeta.titulo.trim()}
         >
           <Plus size={20} />
           Adicionar

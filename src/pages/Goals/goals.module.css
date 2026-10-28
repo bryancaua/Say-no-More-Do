@@ -18,6 +18,7 @@
   display: inline-flex;
   justify-content: center;
   gap: 10px;
+  width: 200px;
   padding: 16px 20px;
   border: none;
   border-radius: 12px;
@@ -111,9 +112,13 @@
   width: 80%;
 }
 
+.metasSection {
+  width: 100%;
+}
+
 .cardsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 1.5rem;
   width: 100%;
   max-width: 1200px;
@@ -121,14 +126,25 @@
   padding: 1rem;
 }
 
-.categoria {
-  display: inline-flex;
-  gap: 0.4rem;
-  background: color-mix(in srgb, var(--cor-categoria) 15%, white);
+/* Linha de filtros: categorias à esquerda, status à direita */
+.categorias {
+  display: flex;
+  flex-wrap: nowrap;
   align-items: center;
-  border-radius: 16px;
-  padding: 4px 8px;
-  width: max-content;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.categoriaButtons {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .pCategoria {
@@ -145,6 +161,51 @@
   display: inline-block;
   background-color: var(--cor-categoria);
   flex-shrink: 0;
+}
+
+/* Controle segmentado: Em andamento / Concluídas / Arquivadas */
+.grupoProgressFilter {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #e7e2f8;
+  border: 1px solid #ddd6f3;
+}
+
+.MetaProgressFilter {
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #5b3fa8;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+.MetaProgressFilter:hover {
+  background: #f3effc;
+}
+
+.MetaProgressFilter:focus-visible {
+  outline: 2px solid #6b4fbb;
+  outline-offset: 2px;
+}
+
+.active,
+.active:hover {
+  background: #ffffff;
+  color: #2f1f80;
+  box-shadow: 0 2px 8px rgba(75, 58, 158, 0.18);
 }
 
 .headerMes {
@@ -249,22 +310,23 @@
   justify-content: space-between;
 }
 
-.categorias {
-  display: flex;
-  gap: 1rem;
-}
-
+/* Botões de categoria (chips brancos com borda) */
 .buttonCategoria {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
   align-items: center;
-  background-color: var(--color-card-bg);
-  border: solid 2px #E4E0EE;
-  width: 111px;
-  font-size: 16px;
-  padding: 6px 16px;
-  border-radius: 16px;
+  background-color: #ffffff;
+  border: solid 1px #E4E0EE;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1c1b2e;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
   transition-property: box-shadow, transform;
   transition-duration: 350ms;
   transition-timing-function: ease;
@@ -325,7 +387,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 260px; 
+  max-height: 260px;
   overflow-y: auto;
   padding-right: 6px;
 }
@@ -388,7 +450,6 @@
   border-radius: 20px;
 }
 
-/* seletor de tipo (Manual / Hábito / Lista) */
 .tiposSubmeta {
   display: flex;
   gap: 4px;
@@ -428,7 +489,6 @@
   box-shadow: 0 1px 4px rgba(63, 45, 143, 0.15);
 }
 
-/* campos dinâmicos das submetas */
 .camposSubmeta {
   display: flex;
   flex-direction: column;
@@ -535,4 +595,3 @@
   filter: brightness(1.08);
   transform: translateY(-1px);
 }
-

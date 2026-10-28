@@ -5,19 +5,15 @@ import { nomeDoMes, anoDoMes, mesesDisponiveis } from "../../utils/data.js";
 import styles from "./goals.module.css";
 import { GoalsCard } from "../../components/ui/GoalsCard/index.jsx";
 import { CATEGORIAS } from "../../utils/categorias.js";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  Star,
-  X,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Star, X } from "lucide-react";
 import { Form } from "../../components/ui/Form/index.jsx";
 import ToDoContext from "../../context/ToDoProvider/ToDoContext.js";
 import { Input } from "../../components/ui/Input/index.jsx";
 import Switch from "../../components/ui/Switch/index.jsx";
 import { Button } from "../../components/ui/Button/index.jsx";
 import { SubmetasEtapa } from "../../components/ui/SubmetasEtapa/index.jsx";
+import { MetaDetalhes } from "../../components/ui/MetaDetalhes/index.jsx";
+import { FILTROS } from "../../utils/filters.js";
 
 export function Goals() {
   const {
@@ -40,15 +36,10 @@ export function Goals() {
     submetasRascunho,
     finalizarMeta,
     cancelarCriacaoMeta,
-    submetaConcluida
+    filtroProgresso,
+    setFiltroProgresso,
   } = use(GoalsContext);
   const { openForm } = use(ToDoContext);
-
-  metaCardsPadrao.forEach((meta) => {
-  meta.submetas.forEach((submeta) => {
-    console.log(meta.tituloMeta, submeta.tipo, submetaConcluida(submeta));
-  });
-  });
 
   return (
     <section className={styles.section}>
@@ -234,56 +225,80 @@ export function Goals() {
           {metaCardsPrincipais.map((meta) => {
             return (
               <div className={styles.div} key={meta.idMeta}>
-                <GoalsCard key={meta.metaId} meta={meta} />
+                <GoalsCard key={meta.idMeta} meta={meta} />
               </div>
             );
           })}
         </div>
 
         <div className={styles.categorias}>
-          <button
-            className={styles.buttonCategoria}
-            onClick={() => setFiltroCategorias("todas")}
-            style={
-              filtroCategorias == "todas"
-                ? {
-                    backgroundColor: "#6B4FBB",
-                    color: "#fff",
-                    transition: "ease 0.2s",
-                  }
-                : null
-            }
-          >
-            Todas
-          </button>
-          {CATEGORIAS.map((categoria) => (
+          <div className={styles.categoriaButtons}>
             <button
-              type="button"
               className={styles.buttonCategoria}
-              key={categoria.id}
-              onClick={() => setFiltroCategorias(categoria.id)}
+              onClick={() => setFiltroCategorias("todas")}
               style={
-                filtroCategorias == categoria.id
+                filtroCategorias == "todas"
                   ? {
-                      backgroundColor: `${categoria.cor}`,
+                      backgroundColor: "#6B4FBB",
                       color: "#fff",
                       transition: "ease 0.2s",
                     }
                   : null
               }
             >
-              <span
-                className={styles.bolinha}
-                style={{
-                  width: "10px",
-                  height: "10px",
-                  "--cor-categoria":
-                    filtroCategorias === categoria.id ? "#fff" : categoria.cor,
-                }}
-              />
-              {categoria.label}
+              Todas
             </button>
-          ))}
+            {CATEGORIAS.map((categoria) => (
+              <button
+                type="button"
+                className={styles.buttonCategoria}
+                key={categoria.id}
+                onClick={() => setFiltroCategorias(categoria.id)}
+                style={
+                  filtroCategorias == categoria.id
+                    ? {
+                        backgroundColor: `${categoria.cor}`,
+                        color: "#fff",
+                        transition: "ease 0.2s",
+                      }
+                    : null
+                }
+              >
+                <span
+                  className={styles.bolinha}
+                  style={{
+                    width: "10px",
+                    height: "10px",
+                    "--cor-categoria":
+                      filtroCategorias === categoria.id
+                        ? "#fff"
+                        : categoria.cor,
+                  }}
+                />
+                {categoria.label}
+              </button>
+            ))}
+          </div>
+
+          <div
+            className={styles.grupoProgressFilter}
+            role="tablist"
+            aria-label="Filtrar metas"
+          >
+            {FILTROS.map((filtro) => (
+              <button
+                key={filtro.id}
+                type="button"
+                role="tab"
+                className={`${styles.MetaProgressFilter} ${
+                  filtro.id === filtroProgresso ? styles.active : ""
+                }`}
+                onClick={() => setFiltroProgresso(filtro.id)}
+              >
+                {filtro.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className={styles.cardsGrid}>
@@ -292,6 +307,8 @@ export function Goals() {
           ))}
         </div>
       </section>
+
+      <MetaDetalhes />
     </section>
   );
 }

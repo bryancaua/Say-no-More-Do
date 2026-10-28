@@ -7,7 +7,9 @@ export function GoalsProvider({ children }) {
   const { closeForm, lists } = use(ToDoContext);
 
   const [categoriaSelecionada, setCategoriaSelecionada] = useState();
+  const [metaAbertaId, setMetaAbertaId] = useState(null);
   const [filtroCategorias, setFiltroCategorias] = useState("todas");
+  const [filtroProgresso, setFiltroProgresso] = useState("andamento");
   const [metaCards, setMetaCards] = useState([]);
   const [indiceMes, setIndiceMes] = useState(0);
 
@@ -27,10 +29,71 @@ export function GoalsProvider({ children }) {
     setIndiceMes((indiceAtual) => indiceAtual - 1);
   }
 
+    const submetaConcluida = (submeta) => {
+    if (submeta.tipo === "lista") {
+      const listaRelacionada = lists.find(
+        (lista) => lista.id === submeta.listaId
+      );
+
+      if (!listaRelacionada) {
+        return false;
+      }
+
+      if (listaRelacionada.todos.length === 0) {
+        return false;
+      }
+
+      const toDosConcluidos = listaRelacionada.todos.filter(
+        (t) => t.concluido
+      ).length;
+
+      const listaFinalizada = toDosConcluidos === listaRelacionada.todos.length;
+
+      return listaFinalizada;
+    }
+
+    return submeta.concluida ?? false;
+  };
+
+    const contagemSubmetas = (meta) => {
+    const submetas = meta.submetas || [];
+
+    const total = submetas.length;
+    const concluidas = submetas.filter((submeta) =>
+      submetaConcluida(submeta)
+    ).length;
+
+    return { total, concluidas };
+  };
+
+    const progressoMeta = (meta) => {
+    const { total, concluidas } = contagemSubmetas(meta);
+
+    if (total > 0) {
+      const metasConcluidasPercent = (concluidas / total) * 100;
+
+      return Math.round(metasConcluidasPercent);
+    }
+
+    return meta.progressoManual ?? 0;
+  };
+
+
+  function filtroProgressoMetas(meta) {
+  if (filtroProgresso === "arquivadas") return meta.arquivada;
+  if (meta.arquivada) return false;
+
+  if (filtroProgresso === "andamento") return progressoMeta(meta) < 100;
+  if (filtroProgresso === "concluidas") return progressoMeta(meta) === 100;
+
+  return true;
+}
+
   const mesSelecionado = mesesDisponiveis()[indiceMes];
 
   const metaCardsFiltrados = metaCards.filter(
     (meta) =>
+      filtroProgressoMetas(meta) &&
       (filtroCategorias === "todas" || meta.categoria === filtroCategorias) &&
       meta.mes === mesSelecionado
   );
@@ -113,32 +176,6 @@ export function GoalsProvider({ children }) {
     closeForm();
   }
 
-  const submetaConcluida = (submeta) => {
-    if (submeta.tipo === "lista") {
-      const listaRelacionada = lists.find(
-        (lista) => lista.id === submeta.listaId
-      );
-
-      if (!listaRelacionada) {
-        return false;
-      }
-
-      if (listaRelacionada.todos.length === 0) {
-        return false;
-      }
-
-      const toDosConcluidos = listaRelacionada.todos.filter(
-        (t) => t.concluido
-      ).length;
-
-      const listaFinalizada = toDosConcluidos === listaRelacionada.todos.length;
-
-      return listaFinalizada;
-    }
-
-    return submeta.concluida ?? false;
-  };
-
   function alternarSubmetaManual(idMeta, idSubmeta) {
     setMetaCards((prev) =>
       prev.map((meta) => {
@@ -152,7 +189,7 @@ export function GoalsProvider({ children }) {
             if (submeta.idSubmeta === idSubmeta) {
               return {
                 ...submeta,
-                concluida: !submeta.concluida
+                concluida: !submeta.concluida,
               };
             }
 
@@ -163,26 +200,64 @@ export function GoalsProvider({ children }) {
     );
   }
 
-  const contagemSubmetas = (meta) => {
-  const submetas = meta.submetas || []
+  const metaAberta =
+    metaCards.find((meta) => meta.idMeta === metaAbertaId) ?? null;
 
-  const total = submetas.length;
-  const concluidas = submetas.filter((submeta) => submetaConcluida(submeta)).length;
+  function abrirMeta(idMeta) {
+    setMetaAbertaId(idMeta);
+  }
 
-  return { total, concluidas };
-};
+  function fecharMeta() {
+    setMetaAbertaId(null);
+  }
 
-  const progressoMeta = (meta) => {
-    const { total, concluidas } = contagemSubmetas(meta);
+  function arquivarMeta(idMeta) {
+    setMetaCards((prev) =>
+      prev.map((meta) =>
+        meta.idMeta === idMeta ? { ...meta, arquivada: true } : meta
+      )
+    );
+    fecharMeta();
+  }
 
-    if (total > 0) {
-      const metasConcluidasPercent = (concluidas / total)*100;
+  function excluirMeta(idMeta) {
+    setMetaCards((prev) => prev.filter((meta) => meta.idMeta !== idMeta));
+    fecharMeta();
+  }
 
-      return Math.round(metasConcluidasPercent);
+  // atual/total/percentual de UMA submeta (usado no texto e na barrinha do painel)
+  const detalhesSubmeta = (submeta) => {
+    if (submeta.tipo === "lista") {
+      const lista = lists.find((l) => l.id === submeta.listaId);
+      const total = lista?.todos.length ?? 0;
+      const atual = lista?.todos.filter((t) => t.concluido).length ?? 0;
+
+      return {
+        atual,
+        total,
+        percent: total > 0 ? Math.round((atual / total) * 100) : 0,
+        nomeLista: lista?.nome ?? "Lista removida",
+      };
     }
 
-    return meta.progressoManual?? 0;
-  }
+    const feito = submeta.concluida ?? false;
+    return {
+      atual: feito ? 1 : 0,
+      total: 1,
+      percent: feito ? 100 : 0,
+      nomeLista: null,
+    };
+  };
+
+  function atualizarProgressoManual(idMeta, valor) {
+  const progresso = Math.min(100, Math.max(0, Number(valor)));
+
+  setMetaCards((prev) =>
+    prev.map((meta) =>
+      meta.idMeta === idMeta ? { ...meta, progressoManual: progresso } : meta,
+    ),
+  );
+}
 
   return (
     <GoalsContext
@@ -198,7 +273,6 @@ export function GoalsProvider({ children }) {
         avançaMes,
         indiceMes,
         regrideMes,
-
         etapaMeta,
         irParaSubmetas,
         voltarParaDadosBasicos,
@@ -209,7 +283,18 @@ export function GoalsProvider({ children }) {
         cancelarCriacaoMeta,
         submetaConcluida,
         progressoMeta,
-        contagemSubmetas
+        contagemSubmetas,
+        metaAberta,
+        abrirMeta,
+        fecharMeta,
+        arquivarMeta,
+        excluirMeta,
+        detalhesSubmeta,
+        alternarSubmetaManual,
+        atualizarProgressoManual,
+        filtroProgressoMetas,
+        filtroProgresso,
+        setFiltroProgresso
       }}
     >
       {children}
