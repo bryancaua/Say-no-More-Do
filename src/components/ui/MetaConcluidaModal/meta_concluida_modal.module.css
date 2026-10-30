@@ -1,0 +1,111 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(28, 27, 46, 0.6);
+  padding: 1rem;
+}
+
+.modal {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 2.5rem 2rem 2.25rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #a8860f;
+}
+
+.titulo {
+  margin: 0.35rem 0 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #1c1b2e;
+}
+
+.anel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  box-sizing: border-box;
+  border: 11px solid #6b4fbb;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.percent {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #1c1b2e;
+}
+
+.nomeMeta {
+  margin: 2rem 0 0.5rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1c1b2e;
+}
+
+.texto {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #6b6880;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.botaoSecundario,
+.botaoPrimario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 52px;
+  padding: 0 1.4rem;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.botaoSecundario {
+  background: #ffffff;
+  color: #1c1b2e;
+  border: 1px solid #e4e0ee;
+}
+
+.botaoPrimario {
+  background: #6b4fbb;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 6px 16px rgba(107, 79, 187, 0.35);
+}
+
+.botaoSecundario:hover,
+.botaoPrimario:hover {
+  transform: translateY(-2px);
+}

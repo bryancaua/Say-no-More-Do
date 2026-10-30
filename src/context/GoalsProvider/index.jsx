@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import GoalsContext from "./GoalsContext";
 import { mesesDisponiveis } from "../../utils/data";
 import ToDoContext from "../ToDoProvider/ToDoContext";
@@ -10,12 +10,19 @@ export function GoalsProvider({ children }) {
   const [metaAbertaId, setMetaAbertaId] = useState(null);
   const [filtroCategorias, setFiltroCategorias] = useState("todas");
   const [filtroProgresso, setFiltroProgresso] = useState("andamento");
-  const [metaCards, setMetaCards] = useState([]);
+  const [metaCards, setMetaCards] = useState(() => {
+    const savedMeta = localStorage.getItem("meta");
+    return savedMeta ? JSON.parse(savedMeta) : [];
+  });
   const [indiceMes, setIndiceMes] = useState(0);
-
   const [etapaMeta, setEtapaMeta] = useState(1);
   const [metaRascunho, setMetaRascunho] = useState(null);
   const [submetasRascunho, setSubmetasRascunho] = useState([]);
+  const [metaConcluidaId, setMetaConcluidaId] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("meta", JSON.stringify(metaCards));
+  }, [metaCards]);
 
   function selecionarCategoria(id) {
     setCategoriaSelecionada(id);
@@ -29,7 +36,7 @@ export function GoalsProvider({ children }) {
     setIndiceMes((indiceAtual) => indiceAtual - 1);
   }
 
-    const submetaConcluida = (submeta) => {
+  const submetaConcluida = (submeta) => {
     if (submeta.tipo === "lista") {
       const listaRelacionada = lists.find(
         (lista) => lista.id === submeta.listaId
@@ -55,7 +62,7 @@ export function GoalsProvider({ children }) {
     return submeta.concluida ?? false;
   };
 
-    const contagemSubmetas = (meta) => {
+  const contagemSubmetas = (meta) => {
     const submetas = meta.submetas || [];
 
     const total = submetas.length;
@@ -66,7 +73,7 @@ export function GoalsProvider({ children }) {
     return { total, concluidas };
   };
 
-    const progressoMeta = (meta) => {
+  const progressoMeta = (meta) => {
     const { total, concluidas } = contagemSubmetas(meta);
 
     if (total > 0) {
@@ -78,16 +85,15 @@ export function GoalsProvider({ children }) {
     return meta.progressoManual ?? 0;
   };
 
-
   function filtroProgressoMetas(meta) {
-  if (filtroProgresso === "arquivadas") return meta.arquivada;
-  if (meta.arquivada) return false;
+    if (filtroProgresso === "arquivadas") return meta.arquivada;
+    if (meta.arquivada) return false;
 
-  if (filtroProgresso === "andamento") return progressoMeta(meta) < 100;
-  if (filtroProgresso === "concluidas") return progressoMeta(meta) === 100;
+    if (filtroProgresso === "andamento") return progressoMeta(meta) < 100;
+    if (filtroProgresso === "concluidas") return progressoMeta(meta) === 100;
 
-  return true;
-}
+    return true;
+  }
 
   const mesSelecionado = mesesDisponiveis()[indiceMes];
 
@@ -121,6 +127,7 @@ export function GoalsProvider({ children }) {
       arquivada: false,
       concluidaEm: null,
       progressoManual: 0,
+      celebrada: false,
     };
 
     setMetaRascunho(novaMetaRascunho);
@@ -250,14 +257,43 @@ export function GoalsProvider({ children }) {
   };
 
   function atualizarProgressoManual(idMeta, valor) {
-  const progresso = Math.min(100, Math.max(0, Number(valor)));
+    const progresso = Math.min(100, Math.max(0, Number(valor)));
 
-  setMetaCards((prev) =>
-    prev.map((meta) =>
-      meta.idMeta === idMeta ? { ...meta, progressoManual: progresso } : meta,
-    ),
-  );
-}
+    setMetaCards((prev) =>
+      prev.map((meta) =>
+        meta.idMeta === idMeta ? { ...meta, progressoManual: progresso } : meta
+      )
+    );
+  }
+
+  const idParaCelebrar =
+    metaCards.find(
+      (m) =>
+        !m.arquivada &&
+        !m.celebrada &&
+        progressoMeta(m) === 100
+    )?.idMeta ?? null;
+
+  if (idParaCelebrar) {
+    setMetaCards((prev) =>
+      prev.map((meta) =>
+        meta.idMeta === idParaCelebrar ? { ...meta, celebrada: true } : meta
+      )
+    );
+    setMetaConcluidaId(idParaCelebrar);
+  }
+
+  const metaConcluida =
+    metaCards.find((m) => m.idMeta === metaConcluidaId) ?? null;
+
+  function fecharCelebracao() {
+    setMetaConcluidaId(null);
+  }
+
+  function arquivarDaCelebracao() {
+    arquivarMeta(metaConcluidaId);
+    setMetaConcluidaId(null);
+  }
 
   return (
     <GoalsContext
@@ -294,7 +330,10 @@ export function GoalsProvider({ children }) {
         atualizarProgressoManual,
         filtroProgressoMetas,
         filtroProgresso,
-        setFiltroProgresso
+        setFiltroProgresso,
+        metaConcluida,
+        fecharCelebracao,
+        arquivarDaCelebracao,
       }}
     >
       {children}

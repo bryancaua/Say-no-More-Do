@@ -14,6 +14,7 @@ import { Button } from "../../components/ui/Button/index.jsx";
 import { SubmetasEtapa } from "../../components/ui/SubmetasEtapa/index.jsx";
 import { MetaDetalhes } from "../../components/ui/MetaDetalhes/index.jsx";
 import { FILTROS } from "../../utils/filters.js";
+import { MetaConcluidaModal } from "../../components/ui/MetaConcluidaModal/index.jsx";
 
 export function Goals() {
   const {
@@ -309,6 +310,7 @@ export function Goals() {
       </section>
 
       <MetaDetalhes />
+      <MetaConcluidaModal />
     </section>
   );
 }
