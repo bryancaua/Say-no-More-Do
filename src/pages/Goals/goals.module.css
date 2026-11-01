@@ -103,13 +103,14 @@
   line-height: 28px;
   letter-spacing: -0.56px;
   font-weight: 600;
-  color: #1C1B2E;
+  white-space: nowrap;
+  color: #1c1b2e;
 }
 
 .linha {
   height: 1px;
-  background-color: #E4E0EE;
-  width: 80%;
+  background-color: #e4e0ee;
+  width: 100%;
 }
 
 .metasSection {
@@ -186,10 +187,7 @@
   font-weight: 500;
   white-space: nowrap;
   color: #5b3fa8;
-  transition:
-    background 0.2s ease,
-    box-shadow 0.2s ease,
-    color 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
 .MetaProgressFilter:hover {
@@ -317,7 +315,7 @@
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-  border: solid 1px #E4E0EE;
+  border: solid 1px #e4e0ee;
   min-width: 0;
   font-family: inherit;
   font-size: 15px;

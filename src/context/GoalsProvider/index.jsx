@@ -227,6 +227,14 @@ export function GoalsProvider({ children }) {
     fecharMeta();
   }
 
+  function desarquivarMeta(idMeta) {
+    setMetaCards((prev) => 
+      prev.map((meta) => 
+        meta.idMeta === idMeta ? {...meta, arquivada: false} : meta
+      )
+    )
+  }
+
   function excluirMeta(idMeta) {
     setMetaCards((prev) => prev.filter((meta) => meta.idMeta !== idMeta));
     fecharMeta();
@@ -324,6 +332,7 @@ export function GoalsProvider({ children }) {
         abrirMeta,
         fecharMeta,
         arquivarMeta,
+        desarquivarMeta,
         excluirMeta,
         detalhesSubmeta,
         alternarSubmetaManual,

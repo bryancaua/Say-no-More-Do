@@ -215,13 +215,11 @@ export function Goals() {
           />
         </div>
       </div>
-
-      <div className={styles.divDestaque}>
+      <section className={styles.metasSection}>
+              <div className={styles.divDestaque}>
         <h2 className={styles.h2Destaque}>Em destaque</h2>
         <div className={styles.linha}></div>
       </div>
-
-      <section className={styles.metasSection}>
         <div className={styles.cardsGrid}>
           {metaCardsPrincipais.map((meta) => {
             return (

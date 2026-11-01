@@ -44,6 +44,7 @@ export function MetaDetalhes() {
     detalhesSubmeta,
     alternarSubmetaManual,
     arquivarMeta,
+    desarquivarMeta,
     excluirMeta,
     atualizarProgressoManual,
   } = use(GoalsContext);
@@ -244,13 +245,24 @@ export function MetaDetalhes() {
             <button type="button" className={styles.acao}>
               <Copy size={14} /> Duplicar p/ próximo mês
             </button>
-            <button
-              type="button"
-              className={styles.acao}
-              onClick={() => arquivarMeta(meta.idMeta)}
-            >
-              <Archive size={14} /> Arquivar
-            </button>
+
+            {meta.arquivada === false ? (
+              <button
+                type="button"
+                className={styles.acao}
+                onClick={() => arquivarMeta(meta.idMeta)}
+              >
+                <Archive size={14} /> Arquivar
+              </button>
+            ) : (
+              <button
+                type="button"
+                className={styles.acao}
+                onClick={() => desarquivarMeta(meta.idMeta)}
+              >
+                <Archive size={14} /> Desarquivar
+              </button>
+            )}
           </div>
           <button
             type="button"
