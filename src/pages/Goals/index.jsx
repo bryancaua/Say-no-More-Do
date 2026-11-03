@@ -1,11 +1,18 @@
 import { use } from "react";
-import { HeaderTitle } from "../../components/ui/HeaderTitle";
 import GoalsContext from "../../context/GoalsProvider/GoalsContext.js";
 import { nomeDoMes, anoDoMes, mesesDisponiveis } from "../../utils/data.js";
 import styles from "./goals.module.css";
 import { GoalsCard } from "../../components/ui/GoalsCard/index.jsx";
 import { CATEGORIAS } from "../../utils/categorias.js";
-import { ArrowLeft, ArrowRight, Check, Star, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  SearchX,
+  Star,
+  Target,
+  X,
+} from "lucide-react";
 import { Form } from "../../components/ui/Form/index.jsx";
 import ToDoContext from "../../context/ToDoProvider/ToDoContext.js";
 import { Input } from "../../components/ui/Input/index.jsx";
@@ -15,6 +22,7 @@ import { SubmetasEtapa } from "../../components/ui/SubmetasEtapa/index.jsx";
 import { MetaDetalhes } from "../../components/ui/MetaDetalhes/index.jsx";
 import { FILTROS } from "../../utils/filters.js";
 import { MetaConcluidaModal } from "../../components/ui/MetaConcluidaModal/index.jsx";
+import { ResumoMes } from "../../components/ui/ResumoMes/index.jsx";
 
 export function Goals() {
   const {
@@ -39,16 +47,27 @@ export function Goals() {
     cancelarCriacaoMeta,
     filtroProgresso,
     setFiltroProgresso,
+    temMetasNoMes,
   } = use(GoalsContext);
   const { openForm } = use(ToDoContext);
 
   return (
     <section className={styles.section}>
       <header className={styles.header}>
-        <HeaderTitle
-          title="Metas e objetivos"
-          description="Foque no que importa este mês"
-        />
+        <div className={styles.titulo}>
+          <p className={styles.breadcrumb}>
+            Metas <span className={styles.separador}>/</span>{" "}
+            <span className={styles.breadcrumbMes}>
+              {nomeDoMes(mesSelecionado)} {anoDoMes(mesSelecionado)}
+            </span>
+          </p>
+          <h1 className={styles.tituloPrincipal}>Metas e objetivos</h1>
+          <p className={styles.descricao}>
+            Acompanhe o que realmente importa neste mês
+          </p>
+          <span className={styles.tituloBarra} aria-hidden="true" />
+        </div>
+
         <button className={styles.buttonMeta} onClick={() => openForm("metas")}>
           + Nova meta
         </button>
@@ -198,7 +217,7 @@ export function Goals() {
         )}
       </Form>
 
-      <div className={styles.div}>
+      <div className={styles.divProgressoMetas}>
         <div className={styles.headerMes}>
           <ArrowLeft
             className={styles.button}
@@ -214,21 +233,28 @@ export function Goals() {
             style={indiceMes >= 11 ? { display: "none" } : undefined}
           />
         </div>
+
+        <ResumoMes />
       </div>
       <section className={styles.metasSection}>
-              <div className={styles.divDestaque}>
-        <h2 className={styles.h2Destaque}>Em destaque</h2>
-        <div className={styles.linha}></div>
-      </div>
-        <div className={styles.cardsGrid}>
-          {metaCardsPrincipais.map((meta) => {
-            return (
-              <div className={styles.div} key={meta.idMeta}>
-                <GoalsCard key={meta.idMeta} meta={meta} />
-              </div>
-            );
-          })}
-        </div>
+        {metaCardsPrincipais.length > 0 && (
+          <div className={styles.divDestaque}>
+            <h2 className={styles.h2Destaque}>Em destaque</h2>
+            <div className={styles.linha}></div>
+          </div>
+        )}
+
+        {metaCardsPrincipais.length > 0 && (
+          <div className={styles.cardsGrid}>
+            {metaCardsPrincipais.map((meta) => {
+              return (
+                <div className={styles.div} key={meta.idMeta}>
+                  <GoalsCard key={meta.idMeta} meta={meta} />
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <div className={styles.categorias}>
           <div className={styles.categoriaButtons}>
@@ -300,11 +326,29 @@ export function Goals() {
           </div>
         </div>
 
-        <div className={styles.cardsGrid}>
-          {metaCardsPadrao.map((meta) => (
-            <GoalsCard key={meta.idMeta} meta={meta} />
-          ))}
-        </div>
+        {metaCardsPadrao.length > 0 || metaCardsPrincipais.length > 0 ? (
+          <div className={styles.cardsGrid}>
+            {metaCardsPadrao.map((meta) => (
+              <GoalsCard key={meta.idMeta} meta={meta} />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.estadoVazio}>
+            <div className={styles.estadoVazioIcone}>
+              {temMetasNoMes ? <SearchX size={24} /> : <Target size={24} />}
+            </div>
+            <p className={styles.estadoVazioTitulo}>
+              {temMetasNoMes
+                ? "Nenhuma meta para esse filtro"
+                : "Nenhuma meta criada ainda"}
+            </p>
+            <p className={styles.estadoVazioTexto}>
+              {temMetasNoMes
+                ? "Tente outra categoria ou outro status para ver suas metas."
+                : "Clique em “+ Nova meta” para definir o foco do mês."}
+            </p>
+          </div>
+        )}
       </section>
 
       <MetaDetalhes />

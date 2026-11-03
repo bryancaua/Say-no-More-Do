@@ -303,6 +303,8 @@ export function GoalsProvider({ children }) {
     setMetaConcluidaId(null);
   }
 
+  const temMetasNoMes = metaCards.filter((meta) => !meta.arquivada && meta.mes === mesSelecionado);
+
   return (
     <GoalsContext
       value={{
@@ -343,6 +345,7 @@ export function GoalsProvider({ children }) {
         metaConcluida,
         fecharCelebracao,
         arquivarDaCelebracao,
+        temMetasNoMes
       }}
     >
       {children}

@@ -9,6 +9,12 @@
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   border-radius: 16px;
   padding: 24px;
+  transition: all 0.2s ease;
+}
+
+.goalsCard:hover {
+  transform: scale(1.02);
+  transition: ease-out 0.2s;
 }
 
 .GoalsInfoDiv {
