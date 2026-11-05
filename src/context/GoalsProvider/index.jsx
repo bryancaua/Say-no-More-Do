@@ -228,11 +228,11 @@ export function GoalsProvider({ children }) {
   }
 
   function desarquivarMeta(idMeta) {
-    setMetaCards((prev) => 
-      prev.map((meta) => 
-        meta.idMeta === idMeta ? {...meta, arquivada: false} : meta
+    setMetaCards((prev) =>
+      prev.map((meta) =>
+        meta.idMeta === idMeta ? { ...meta, arquivada: false } : meta
       )
-    )
+    );
   }
 
   function excluirMeta(idMeta) {
@@ -264,6 +264,21 @@ export function GoalsProvider({ children }) {
     };
   };
 
+  function removerSubmetaDaMeta(idMeta, idSubmeta) {
+    setMetaCards((metas) =>
+      metas.map((meta) =>
+        meta.idMeta === idMeta
+          ? {
+              ...meta,
+              submetas: meta.submetas.filter(
+                (submeta) => submeta.idSubmeta !== idSubmeta
+              ),
+            }
+          : meta
+      )
+    );
+  }
+
   function atualizarProgressoManual(idMeta, valor) {
     const progresso = Math.min(100, Math.max(0, Number(valor)));
 
@@ -276,10 +291,7 @@ export function GoalsProvider({ children }) {
 
   const idParaCelebrar =
     metaCards.find(
-      (m) =>
-        !m.arquivada &&
-        !m.celebrada &&
-        progressoMeta(m) === 100
+      (m) => !m.arquivada && !m.celebrada && progressoMeta(m) === 100
     )?.idMeta ?? null;
 
   if (idParaCelebrar) {
@@ -303,7 +315,9 @@ export function GoalsProvider({ children }) {
     setMetaConcluidaId(null);
   }
 
-  const temMetasNoMes = metaCards.filter((meta) => !meta.arquivada && meta.mes === mesSelecionado);
+  const temMetasNoMes = metaCards.filter(
+    (meta) => !meta.arquivada && meta.mes === mesSelecionado
+  );
 
   return (
     <GoalsContext
@@ -324,6 +338,7 @@ export function GoalsProvider({ children }) {
         voltarParaDadosBasicos,
         adicionarSubmeta,
         removerSubmeta,
+        removerSubmetaDaMeta,
         submetasRascunho,
         finalizarMeta,
         cancelarCriacaoMeta,
@@ -345,7 +360,7 @@ export function GoalsProvider({ children }) {
         metaConcluida,
         fecharCelebracao,
         arquivarDaCelebracao,
-        temMetasNoMes
+        temMetasNoMes,
       }}
     >
       {children}

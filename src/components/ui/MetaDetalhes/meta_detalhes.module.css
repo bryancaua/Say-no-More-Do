@@ -222,6 +222,7 @@
 
 .tags {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
@@ -276,7 +277,8 @@
 .rodapeIcons {
   display: flex;
   gap: 1rem;
-  margin-bottom: 1rem;
+  width: 100%;
+  justify-content: center;
 }
 
 .acao {
@@ -375,4 +377,28 @@
   border-radius: 50%;
   background: var(--cor-slider);
   border: 3px solid #fff;
+}
+
+.excluirSubmeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: #8a869c;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.excluirSubmeta:hover {
+  color: #d64545;
+  background-color: rgba(214, 69, 69, 0.08);
+}
+
+.excluirSubmeta:focus-visible {
+  outline: 2px solid #d64545;
+  outline-offset: 2px;
 }

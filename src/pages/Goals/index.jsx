@@ -205,7 +205,9 @@ export function Goals() {
               </label>
             </div>
 
-            <Button type="submit">Próximo</Button>
+            <div style={{display: "flex", justifyContent: "flex-end"}}>
+              <Button type="submit">Próximo</Button>
+            </div>
           </div>
         ) : (
           <SubmetasEtapa

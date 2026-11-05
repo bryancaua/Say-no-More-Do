@@ -47,6 +47,7 @@ export function MetaDetalhes() {
     desarquivarMeta,
     excluirMeta,
     atualizarProgressoManual,
+    removerSubmetaDaMeta,
   } = use(GoalsContext);
 
   useEffect(() => {
@@ -212,6 +213,26 @@ export function MetaDetalhes() {
                             {texto}
                           </span>
 
+                          <button
+                            type="button"
+                            className={styles.excluirSubmeta}
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  `Remover a submeta "${submeta.titulo}"?`
+                                )
+                              ) {
+                                removerSubmetaDaMeta(
+                                  meta.idMeta,
+                                  submeta.idSubmeta
+                                );
+                              }
+                            }}
+                            aria-label={`Remover submeta ${submeta.titulo}`}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+
                           {submeta.data && (
                             <span className={styles.prazo}>
                               <CalendarDays size={14} />
@@ -242,10 +263,6 @@ export function MetaDetalhes() {
             <button type="button" className={styles.acao}>
               <Pencil size={14} /> Editar
             </button>
-            <button type="button" className={styles.acao}>
-              <Copy size={14} /> Duplicar p/ próximo mês
-            </button>
-
             {meta.arquivada === false ? (
               <button
                 type="button"
@@ -263,14 +280,15 @@ export function MetaDetalhes() {
                 <Archive size={14} /> Desarquivar
               </button>
             )}
+
+            <button
+              type="button"
+              className={`${styles.acao} ${styles.excluir}`}
+              onClick={confirmarExclusao}
+            >
+              <Trash2 size={14} /> Excluir
+            </button>
           </div>
-          <button
-            type="button"
-            className={`${styles.acao} ${styles.excluir}`}
-            onClick={confirmarExclusao}
-          >
-            <Trash2 size={14} /> Excluir
-          </button>
         </footer>
       </aside>
     </div>
